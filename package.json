@@ -1,0 +1,16 @@
+{
+  "name": "unfollowers",
+  "version": "1.0.0",
+  "description": "An application that reports Instagram users that unfollow your account.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mohsin Haider",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "request": "^2.88.0"
+  }
+}
