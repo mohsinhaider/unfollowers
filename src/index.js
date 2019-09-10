@@ -10,11 +10,9 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 app.use(express.static(publicDirectoryPath));
 
 app.get('/login', async (req, res) => {
-    // TODO: Move this to helpers
-    function testFunc() {
-        res.send('Hello2!');
-    }
-    login(testFunc);
+    login((error, response) => {
+        // TODO: Add logic here
+    });
 });
 
 // Testing purpose only, works after /login is called.
