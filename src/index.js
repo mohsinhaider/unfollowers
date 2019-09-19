@@ -20,7 +20,8 @@ app.get('/login', async (req, res) => {
         });
     }
     catch (error) {
-
+        // TODO: Create 404 page
+        // res.render('index/404')
     }
 });
 
