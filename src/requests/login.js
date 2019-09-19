@@ -20,8 +20,8 @@ module.exports = {
                 }    
             }
 
-            const csrfTokenValue = cookieStringsArray[csrfTokenIndex].split('=')[1].slice(0, -1);
-            loginHeaders['X-CSRFToken'] = csrfTokenValue;
+            // Add CSRF token required for login request to http headers
+            loginHeaders['X-CSRFToken'] = cookieStringsArray[csrfTokenIndex].split('=')[1].slice(0, -1);
 
             request.post({
                 headers: loginHeaders,
