@@ -11,17 +11,17 @@ module.exports = {
             url: process.env.INSTAGRAM_URI_GET_CSRF_TOKEN,
             jar
         }, (error, response, body) => {
-            const cookieStringsArray = jar.getCookieString(process.env.INSTAGRAM_URI_GET_CSRF_TOKEN).split(' ');
+            const preLoginCookieStringsArray = jar.getCookieString(process.env.INSTAGRAM_URI_GET_CSRF_TOKEN).split(' ');
             let csrfTokenIndex = 0;
             
-            for (let i = 0; i < cookieStringsArray.length; i++) {
-                if (cookieStringsArray[i].includes('csrftoken')) {
+            for (let i = 0; i < preLoginCookieStringsArray.length; i++) {
+                if (preLoginCookieStringsArray[i].includes('csrftoken')) {
                     csrfTokenIndex = i;
                 }    
             }
 
             // Add CSRF token required for login request to http headers
-            loginHeaders['X-CSRFToken'] = cookieStringsArray[csrfTokenIndex].split('=')[1].slice(0, -1);
+            loginHeaders['X-CSRFToken'] = preLoginCookieStringsArray[csrfTokenIndex].split('=')[1].slice(0, -1);
 
             request.post({
                 headers: loginHeaders,
