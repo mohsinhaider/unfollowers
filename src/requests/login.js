@@ -1,5 +1,5 @@
 const request = require('request').defaults({ jar: true });
-const { followHeaders, initialCsrfTokenHeaders } = require('../headers/headers');
+const { initialCsrfTokenHeaders } = require('../headers/headers');
 const { follow } = require('./follow');
 
 module.exports = {
