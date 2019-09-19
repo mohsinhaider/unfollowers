@@ -83,8 +83,9 @@ module.exports = {
                 // As long as the new csrf token is fetched, requests will continue to stay authenticated.
                 const csrfTokenValue2 = cookieStringsArray2[csrfTokenIndex2].split('=')[1].slice(0, -1);
                 process.env.SERVER_CSRF_TOKEN_VALUE = csrfTokenValue2;
-
-                callback();
+                
+                // TODO: send in error and response in below call to callback()
+                // callback();
             });
         });
     }
