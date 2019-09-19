@@ -1,6 +1,7 @@
 const request = require('request').defaults({ jar: true });
-const { initialCsrfTokenHeaders, loginHeaders } = require('../headers/headers');
+
 const { follow } = require('./follow');
+const { initialCsrfTokenHeaders, loginHeaders } = require('../headers/headers');
 
 module.exports = {
     login: async (callback) => {
@@ -12,16 +13,16 @@ module.exports = {
             jar
         }, (error, response, body) => {
             const preLoginCookieStringsArray = jar.getCookieString(process.env.INSTAGRAM_URI_GET_CSRF_TOKEN).split(' ');
-            let csrfTokenIndex = 0;
+            let preLoginCsrfTokenIndex = 0;
             
             for (let i = 0; i < preLoginCookieStringsArray.length; i++) {
                 if (preLoginCookieStringsArray[i].includes('csrftoken')) {
-                    csrfTokenIndex = i;
+                    preLoginCsrfTokenIndex = i;
                 }    
             }
 
             // Add CSRF token required for login request to http headers
-            loginHeaders['X-CSRFToken'] = preLoginCookieStringsArray[csrfTokenIndex].split('=')[1].slice(0, -1);
+            loginHeaders['X-CSRFToken'] = preLoginCookieStringsArray[preLoginCsrfTokenIndex].split('=')[1].slice(0, -1);
 
             request.post({
                 headers: loginHeaders,
@@ -36,23 +37,22 @@ module.exports = {
             }, (error, response, body) => {
                 console.log(response.body);
 
-                let cookieStringsArray2 = jar.getCookieString(process.env.INSTAGRAM_URI_BASE_HTTPS_WWW).split(' ')
+                let loginCookieStringsArray = jar.getCookieString(process.env.INSTAGRAM_URI_BASE_HTTPS_WWW).split(' ')
 
-                let csrfTokenIndex2 = 0;
-                for (let i = 0; i < cookieStringsArray2.length; i++) {
-                    if (cookieStringsArray2[i].includes('csrftoken')) {
-                        csrfTokenIndex2 = i;
+                let loginCsrfTokenIndex = 0;
+                for (let i = 0; i < loginCookieStringsArray.length; i++) {
+                    if (loginCookieStringsArray[i].includes('csrftoken')) {
+                        loginCsrfTokenIndex = i;
                     }    
                 }
 
-                // As long as the new csrf token is fetched, requests will continue to stay authenticated.
-                const csrfTokenValue2 = cookieStringsArray2[csrfTokenIndex2].split('=')[1].slice(0, -1);
-                process.env.SERVER_CSRF_TOKEN_VALUE = csrfTokenValue2;
+                // Set an environment variable with the CSRF token retrieved at login time
+                process.env.SERVER_CSRF_TOKEN_VALUE = loginCookieStringsArray[loginCsrfTokenIndex].split('=')[1].slice(0, -1);
                 
                 // TODO: send in error and response in below call to callback()
                 // callback();
 
-                follow('8542252', csrfTokenValue2, jar);
+                follow('8542252', process.env.SERVER_CSRF_TOKEN_VALUE, jar);
             });
         });
     }
