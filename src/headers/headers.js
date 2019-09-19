@@ -27,5 +27,20 @@ module.exports = {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36',
         'X-Instagram-AJAX': '1',
         'X-Requested-With': 'XMLHttpRequest'
+    },
+    loginHeaders: {
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Host': process.env.INSTAGRAM_URI_BASE_WWW,
+        'Origin': process.env.INSTAGRAM_URI_BASE_HTTPS_WWW,
+        'Pragma': 'no-cache',
+        'Referer': process.env.INSTAGRAM_URI_BASE_HTTPS_WWW,
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36',
+        'X-Instagram-AJAX': '1',
+        'X-Requested-With': 'XMLHttpRequest'
     }
 }
