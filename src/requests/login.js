@@ -1,14 +1,11 @@
 const request = require('request').defaults({ jar: true });
-const { initialCsrfTokenHeaders } = require('../headers/headers');
+const { followHeaders, initialCsrfTokenHeaders } = require('../headers/headers');
+const { follow } = require('./follow');
 
 module.exports = {
     login: async (callback) => {
         const COOKIES = [ 'sessionid=', 'mid=', 'ig_pr=1', 'ig_vw=1920', 'ig_cb=1', 'csrftoken=', 's_network=', 'ds_user_id=' ]
         let jar = request.jar();
-
-        COOKIES.forEach(cookie => {
-            jar.setCookie(cookie, process.env.INSTAGRAM_URI_BASE);
-        });
 
         request.get({
             headers: initialCsrfTokenHeaders,
@@ -71,6 +68,8 @@ module.exports = {
                 
                 // TODO: send in error and response in below call to callback()
                 // callback();
+
+                follow('8542252', csrfTokenValue2, jar);
             });
         });
     }
