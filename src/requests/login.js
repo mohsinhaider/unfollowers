@@ -1,5 +1,4 @@
 const request = require('request').defaults({ jar: true });
-const { follow } = require('./follow');
 
 module.exports = {
     login: async (callback) => {
