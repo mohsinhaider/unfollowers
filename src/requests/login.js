@@ -36,7 +36,7 @@ module.exports = {
             }, (error, response, body) => {
                 console.log(response.body);
 
-                let cookieStringsArray2 = jar.getCookieString('https://www.instagram.com/').split(' ')
+                let cookieStringsArray2 = jar.getCookieString(process.env.INSTAGRAM_URI_BASE_HTTPS_WWW).split(' ')
 
                 let csrfTokenIndex2 = 0;
                 for (let i = 0; i < cookieStringsArray2.length; i++) {
