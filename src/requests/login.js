@@ -4,7 +4,6 @@ const { follow } = require('./follow');
 
 module.exports = {
     login: async (callback) => {
-        const COOKIES = [ 'sessionid=', 'mid=', 'ig_pr=1', 'ig_vw=1920', 'ig_cb=1', 'csrftoken=', 's_network=', 'ds_user_id=' ]
         let jar = request.jar();
 
         request.get({
