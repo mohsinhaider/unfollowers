@@ -1,5 +1,5 @@
 module.exports = {
-    headersFollow: {
+    followHeaders: {
         'Accept': '*/*',
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'en-US,en;q=0.8',
