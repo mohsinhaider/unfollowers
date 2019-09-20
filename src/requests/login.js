@@ -6,6 +6,8 @@ const { initialCsrfTokenHeaders, loginHeaders } = require('../headers/headers');
 
 module.exports = {
     login: async (callback) => {
+        const csrfTokenKey = 'csrftoken';
+
         // Explicitly create a request Cookie jar for reuse throughout the request module calls
         let jar = request.jar();
 
@@ -16,7 +18,7 @@ module.exports = {
             jar
         }, (error, response, body) => {
             // Extract the cookie values that were populated in the request jar into an array
-            let preLoginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_GET_CSRF_TOKEN, 'csrftoken');
+            let preLoginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_GET_CSRF_TOKEN, csrfTokenKey);
 
             // Remove trailing semicolon that is added to the csrf token by Instagram
             preLoginCsrfTokenCookieValue = preLoginCsrfTokenCookieValue.slice(0, -1);
@@ -38,18 +40,11 @@ module.exports = {
             }, (error, response, body) => {
                 console.log(response.body);
 
-                let loginCookieStringsArray = jar.getCookieString(process.env.INSTAGRAM_URI_BASE_HTTPS_WWW).split(' ')
-
-                // TODO: Fix code duplication by introducing helper method
-                let loginCsrfTokenIndex = 0;
-                for (let i = 0; i < loginCookieStringsArray.length; i++) {
-                    if (loginCookieStringsArray[i].includes('csrftoken')) {
-                        loginCsrfTokenIndex = i;
-                    }    
-                }
+                let loginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, csrfTokenKey);
+                loginCsrfTokenCookieValue = loginCsrfTokenCookieValue.slice(0, -1);
 
                 // Set an environment variable with the CSRF token retrieved at login time
-                process.env.SERVER_CSRF_TOKEN_VALUE = loginCookieStringsArray[loginCsrfTokenIndex].split('=')[1].slice(0, -1);
+                process.env.SERVER_CSRF_TOKEN_VALUE = loginCsrfTokenCookieValue;
                 
                 // TODO: send in error and response in below call to callback()
                 // callback();
