@@ -2,8 +2,8 @@ module.exports = {
     getCookieStringValue: (cookieJar, url, key) => {
         const cookieStringPairsArray = cookieJar.getCookieString(url).split(' ');
         
-        for (let indexOfPair = 0; indexOfPair < cookieStringPairsArray.length; i++) {
-            if (cookieStringPairsArray[i].includes(key)) {
+        for (var indexOfPair = 0; indexOfPair < cookieStringPairsArray.length; indexOfPair++) {
+            if (cookieStringPairsArray[indexOfPair].includes(key)) {
                 break;
             }    
         }
