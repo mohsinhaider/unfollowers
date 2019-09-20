@@ -16,20 +16,13 @@ module.exports = {
             jar
         }, (error, response, body) => {
             // Extract the cookie values that were populated in the request jar into an array
-            const preLoginCookieStringsArray = jar.getCookieString(process.env.INSTAGRAM_URI_GET_CSRF_TOKEN).split(' ');
-            
-            // Retrieve the index that in the array of cookies that represents the CSRF token
-            let preLoginCsrfTokenIndex = 0;
-            
-            // TODO: Fix code duplication by introducing helper method
-            for (let i = 0; i < preLoginCookieStringsArray.length; i++) {
-                if (preLoginCookieStringsArray[i].includes('csrftoken')) {
-                    preLoginCsrfTokenIndex = i;
-                }    
-            }
+            let csrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_GET_CSRF_TOKEN, 'csrftoken');
+
+            // Remove trailing semicolon that is added to the csrf token by Instagram
+            csrfTokenCookieValue = csrfTokenCookieValue.slice(0, -1);
 
             // Add CSRF token required for login request to http headers
-            loginHeaders['X-CSRFToken'] = preLoginCookieStringsArray[preLoginCsrfTokenIndex].split('=')[1].slice(0, -1);
+            loginHeaders['X-CSRFToken'] = csrfTokenCookieValue;
 
             // Request to /accounts/login that gets login CSRF token value that is reusable across successive Instagram requests
             request.post({
