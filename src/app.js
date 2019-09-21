@@ -26,12 +26,4 @@ login((error, response) => {
 
 app.use('/', IndexRouter);
 
-/**
- * Retrieves the CSRF token generated at login time.
- * @name GET/api/v1/token
-*/
-app.get('/token', (req, res) => {
-    res.send(process.env.SERVER_CSRF_TOKEN_VALUE);
-});
-
 module.exports = app;
