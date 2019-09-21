@@ -21,4 +21,12 @@ router.get('/login', async (req, res) => {
     }
 });
 
+/**
+ * Retrieves the CSRF token generated at login time.
+ * @name GET/api/v1/token
+*/
+router.get('/token', (req, res) => {
+    res.send(process.env.SERVER_CSRF_TOKEN_VALUE);
+});
+
 module.exports = router;
