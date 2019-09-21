@@ -38,13 +38,17 @@ module.exports = {
                 },
                 jar
             }, (error, response, body) => {
-                console.log(response.body);
-
                 let loginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, csrfTokenKey);
                 loginCsrfTokenCookieValue = loginCsrfTokenCookieValue.slice(0, -1);
 
                 // Set an environment variable with the CSRF token retrieved at login time
                 process.env.SERVER_CSRF_TOKEN_VALUE = loginCsrfTokenCookieValue;
+
+                if (error) {
+                    callback(error, null);
+                }
+
+                callback(null, response);
             });
         });
     }
