@@ -45,11 +45,6 @@ module.exports = {
 
                 // Set an environment variable with the CSRF token retrieved at login time
                 process.env.SERVER_CSRF_TOKEN_VALUE = loginCsrfTokenCookieValue;
-                
-                // TODO: send in error and response in below call to callback()
-                // callback();
-
-                follow('8542252', process.env.SERVER_CSRF_TOKEN_VALUE, jar);
             });
         });
     }
