@@ -17,6 +17,7 @@
     "request": "^2.88.0"
   },
   "devDependencies": {
+    "jest": "^24.8.0",
     "supertest": "^3.4.1"
   }
 }
