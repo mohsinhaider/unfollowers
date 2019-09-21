@@ -10,6 +10,10 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 // Set public assets directory
 app.use(express.static(publicDirectoryPath));
 
+// Utilize body-parser as Express middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 /**
  * Logs in the API server to Instagram
  * @name GET/api/v1/login
