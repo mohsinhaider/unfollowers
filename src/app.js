@@ -2,6 +2,8 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
 
+const IndexRouter = require('./routes/index');
+
 const { login } = require('./requests/login');
 
 const app = express();
@@ -22,23 +24,7 @@ login((error, response) => {
     console.log('Login was successful');
 });
 
-/**
- * Logs in the API server to Instagram
- * @name GET/api/v1/login
-*/
-app.get('/login', async (req, res) => {
-    try {
-        login((error, response) => {
-            if (error) {
-                res.render('index/404');
-            }
-            res.status(200).send('Login was successful');
-        });
-    }
-    catch (error) {
-        res.render('index/404')
-    }
-});
+app.use('/', IndexRouter);
 
 /**
  * Retrieves the CSRF token generated at login time.
