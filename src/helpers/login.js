@@ -1,4 +1,10 @@
 module.exports = {
+    /**
+        * Returns the value of a Cookie.
+        * @param {object} cookieJar   A 'requests' package structure that holds cookies by URL
+        * @param {String} url         URL in cookieJar that holds individual cookie key-value pairs.
+        * @param {String} key         Key in key-value pair located in a Cookie.
+    */
     getCookieStringValue: (cookieJar, url, key) => {
         const cookieStringPairsArray = cookieJar.getCookieString(url).split(' ');
         
