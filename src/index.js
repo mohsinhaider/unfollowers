@@ -16,12 +16,15 @@ app.use(express.static(publicDirectoryPath));
 app.get('/login', async (req, res) => {
     try {
         login((error, response) => {
-            // TODO: Add logic here
+            error = true;
+            if (error) {
+                res.render('index/404');
+            }
+            res.send('Login was successful');
         });
     }
     catch (error) {
-        // TODO: Create 404 page
-        // res.render('index/404')
+        res.render('index/404')
     }
 });
 
