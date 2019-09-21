@@ -7,7 +7,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 const publicDirectoryPath = path.join(__dirname, '../public');
 
+// Set public assets directory
 app.use(express.static(publicDirectoryPath));
+
+// Utilize body-parser as Express middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 /**
  * Logs in the API server to Instagram
@@ -16,12 +21,14 @@ app.use(express.static(publicDirectoryPath));
 app.get('/login', async (req, res) => {
     try {
         login((error, response) => {
-            // TODO: Add logic here
+            if (error) {
+                res.render('index/404');
+            }
+            res.send('Login was successful');
         });
     }
     catch (error) {
-        // TODO: Create 404 page
-        // res.render('index/404')
+        res.render('index/404')
     }
 });
 
