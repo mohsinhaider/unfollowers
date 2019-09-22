@@ -7,6 +7,7 @@ const IndexRouter = require('./routes/index.routes');
 const { login } = require('./requests/login');
 
 const app = express();
+const apiRoutePrefix = '/api';
 const publicDirectoryPath = path.join(__dirname, '../public');
 
 // Set public assets directory
@@ -24,6 +25,6 @@ login((error, response) => {
     console.log('Login was successful');
 });
 
-app.use('/', IndexRouter);
+app.use(apiRoutePrefix + '/', IndexRouter);
 
 module.exports = app;

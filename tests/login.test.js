@@ -3,6 +3,6 @@ const supertest = require('supertest');
 
 test('Should login an existing Instagram user', async () => {
     const response = await supertest(app)
-        .get('/login')
+        .get('/api/login')
         .expect(200);
 });
