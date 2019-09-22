@@ -3,8 +3,7 @@ const express = require('express');
 const path = require('path');
 
 const IndexRouter = require('./routes/index.routes');
-
-const { login } = require('./requests/login');
+const NonfollowerRouter = require('./routes/nonfollower.routes');
 
 const app = express();
 const apiRoutePrefix = '/api';
@@ -17,14 +16,8 @@ app.use(express.static(publicDirectoryPath));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Log in the server to Instagram immediately
-login((error, response) => {
-    if (error) {
-        throw new Error('Server could not log into Instagram, exiting abruptly.')
-    }
-    console.log('Login was successful');
-});
-
+// Set up routers with Express middleware
 app.use(apiRoutePrefix + '/', IndexRouter);
+app.use(apiRoutePrefix + '/nonfollower', NonfollowerRouter);
 
 module.exports = app;

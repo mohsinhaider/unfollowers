@@ -9,12 +9,8 @@ const router = express.Router();
 */
 router.get('/login', async (req, res) => {
     try {
-        login((error, response) => {
-            if (error) {
-                res.render('index/404');
-            }
-            res.status(200).send('Login was successful');
-        });
+        const response = await login();
+        res.status(200).send('Login was successful');
     }
     catch (error) {
         res.render('index/404')
