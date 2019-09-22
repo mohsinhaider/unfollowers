@@ -1,5 +1,7 @@
 const express = require('express');
 
+const { followers } = require('../requests/followers');
+
 const router = express.Router();
 
 /**
@@ -8,6 +10,7 @@ const router = express.Router();
  * @name GET/api/nonfollowers
 */
 router.post('/', (req, res) => {
+    followers(process.env.SERVER_CSRF_TOKEN_VALUE);
     res.sendStatus(200);
 });
 
