@@ -5,7 +5,7 @@ const router = express.Router();
 
 /**
  * Logs in the API server to Instagram
- * @name GET/api/v1/login
+ * @name GET/api/login
 */
 router.get('/login', async (req, res) => {
     try {
@@ -23,7 +23,7 @@ router.get('/login', async (req, res) => {
 
 /**
  * Retrieves the CSRF token generated at login time.
- * @name GET/api/v1/token
+ * @name GET/api/token
 */
 router.get('/token', (req, res) => {
     res.send(process.env.SERVER_CSRF_TOKEN_VALUE);
