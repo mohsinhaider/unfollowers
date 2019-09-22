@@ -3,6 +3,7 @@ const express = require('express');
 const path = require('path');
 
 const IndexRouter = require('./routes/index.routes');
+const NonfollowerRouter = require('./routes/nonfollower.routes');
 
 const { login } = require('./requests/login');
 
@@ -26,5 +27,6 @@ login((error, response) => {
 });
 
 app.use(apiRoutePrefix + '/', IndexRouter);
+app.use(apiRoutePrefix + '/nonfollower', NonfollowerRouter);
 
 module.exports = app;
