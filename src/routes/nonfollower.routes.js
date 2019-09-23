@@ -7,7 +7,7 @@ const router = express.Router();
 /**
  * Calculates the set of your Instagram followers 
  * that do not follow you back ('nonfollowers').
- * @name GET/api/nonfollowers
+ * @name POST/api/nonfollowers
 */
 router.post('/', (req, res) => {
     followers(process.env.SERVER_CSRF_TOKEN_VALUE);
