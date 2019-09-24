@@ -4,7 +4,7 @@ const { getCookieStringValue } = require('../helpers/login');
 const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
 
 module.exports = {
-    login: async (callback) => {
+    login: async () => {
         return new Promise((resolve, reject) => {
             const csrfTokenKey = 'csrftoken';
             const sessionIdKey = 'sessionid';
