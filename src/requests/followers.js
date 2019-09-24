@@ -32,7 +32,8 @@ module.exports = {
             gzip: true,
             url: followersRequestUrl
         }, (error, response) => {
-            console.log(response.body);
+            const responseObject = JSON.parse(response.body);
+            console.log(responseObject['data']['user']['edge_followed_by']['edges']);
         });
     }
 }
