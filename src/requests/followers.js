@@ -33,8 +33,20 @@ module.exports = {
                 gzip: true,
                 url: followersRequestUrl
             }, (error, response) => {
+                if (response.statusCode != 200 || error) {
+                    // Request is malformed or Instagram could not respond successfully
+                    reject('Followers request completed unsuccessfully, response status code was not 200 or there was an error.')
+                }
+
                 const responseObject = JSON.parse(response.body);
-                console.log(responseObject['data']['user']['edge_followed_by']['edges']);
+                const followers = responseObject['data']['user']['edge_followed_by']['edges'];
+
+                if (followers.length == 0) {
+                    // Authentication issue in Cookie header
+                    reject('Followers request completed unsuccessfully, response status code was 200, but edges array is empty.');
+                }
+
+                resolve(followers);
             });
         })
     }
