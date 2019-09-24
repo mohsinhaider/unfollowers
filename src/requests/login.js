@@ -1,6 +1,5 @@
 const request = require('request').defaults({ jar: true });
 
-const { followers } = require('./followers');
 const { getCookieStringValue } = require('../helpers/login');
 const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
 
@@ -42,7 +41,7 @@ module.exports = {
                 }, (error, response, body) => {
                     let loginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, csrfTokenKey);
                     loginCsrfTokenCookieValue = loginCsrfTokenCookieValue.slice(0, -1);
-                    
+
                     let sessionIdCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, sessionIdKey);
 
                     // Set an environment variable with the CSRF token retrieved at login time
