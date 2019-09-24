@@ -10,7 +10,7 @@ const router = express.Router();
  * @name POST/api/nonfollowers
 */
 router.post('/', (req, res) => {
-    followers(process.env.SERVER_CSRF_TOKEN_VALUE);
+    followers(process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
     res.sendStatus(200);
 });
 
