@@ -1,5 +1,6 @@
 const request = require('request').defaults({ jar: true });
 
+const { followers } = require('./followers');
 const { getCookieStringValue } = require('../helpers/login');
 const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
 
@@ -7,6 +8,7 @@ module.exports = {
     login: async (callback) => {
         return new Promise((resolve, reject) => {
             const csrfTokenKey = 'csrftoken';
+            const sessionIdKey = 'sessionid';
 
             // Explicitly create a request Cookie jar for reuse throughout the request module calls
             let jar = request.jar();
@@ -40,9 +42,12 @@ module.exports = {
                 }, (error, response, body) => {
                     let loginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, csrfTokenKey);
                     loginCsrfTokenCookieValue = loginCsrfTokenCookieValue.slice(0, -1);
+                    
+                    let sessionIdCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, sessionIdKey);
 
                     // Set an environment variable with the CSRF token retrieved at login time
                     process.env.SERVER_CSRF_TOKEN_VALUE = loginCsrfTokenCookieValue;
+                    process.env.SERVER_SESSION_ID_VALUE = sessionIdCookieValue;
 
                     if (error) {
                         reject(error);
