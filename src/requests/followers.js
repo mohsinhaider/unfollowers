@@ -41,7 +41,7 @@ module.exports = {
                 const responseObject = JSON.parse(response.body);
                 const followers = responseObject['data']['user']['edge_followed_by']['edges'];
 
-                if (followers.length == 0) {
+                if (followers.length == 0) { // TODO: Consider case where user has 0 followers.
                     // Authentication issue in Cookie header
                     reject('Followers request completed unsuccessfully, response status code was 200, but edges array is empty.');
                 }
