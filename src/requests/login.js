@@ -1,4 +1,5 @@
 const request = require('request').defaults({ jar: true });
+const Bot = require('../models/bot');
 
 const { getCookieStringValue } = require('../helpers/login');
 const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
@@ -6,8 +7,14 @@ const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
 module.exports = {
     login: async () => {
         return new Promise((resolve, reject) => {
+            // TODO: Check bots collection under process.env.SERVER_INSTAGRAM_USER_USERNAME to see if csrftoken and sessionid exist
+            // if we find existing auth info, then check if they've expired.
+                // if not expired, resolve.
+            // execute code blow if the tokens do not exist OR if they have expired.
+
             const csrfTokenKey = 'csrftoken';
             const sessionIdKey = 'sessionid';
+            const userIdKey = 'ds_user_id';
 
             // Explicitly create a request Cookie jar for reuse throughout the request module calls
             let jar = request.jar();
@@ -43,10 +50,22 @@ module.exports = {
                     loginCsrfTokenCookieValue = loginCsrfTokenCookieValue.slice(0, -1);
 
                     let sessionIdCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, sessionIdKey);
+                    let userIdCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, userIdKey);
+                    userIdCookieValue = userIdCookieValue.slice(0, -1);
 
                     // Set an environment variable with the CSRF token retrieved at login time
                     process.env.SERVER_CSRF_TOKEN_VALUE = loginCsrfTokenCookieValue;
+                    process.env.SERVER_INSTAGRAM_USER_ID = userIdCookieValue;
                     process.env.SERVER_SESSION_ID_VALUE = sessionIdCookieValue;
+
+                    // TODO: Add csrftoken and session id to bots collection under user process.env.SERVER_INSTAGRAM_USER_USERNAME
+                    // Also add response headers expiry date
+                    Bot.findOneAndUpdate({ userId: process.env.SERVER_INSTAGRAM_USER_ID }, {
+                        sessionId: process.env.SERVER_SESSION_ID_VALUE,
+                        csrfToken: process.env.SERVER_CSRF_TOKEN_VALUE
+                    }, {
+                        upsert: true
+                    });
 
                     if (error) {
                         reject(error);
