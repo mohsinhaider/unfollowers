@@ -25,6 +25,6 @@ const BotSchema = new mongoose.Schema({
     timestamps: true
 });
 
-const BotModel = new mongoose.model('Bot', BotSchema);
+const BotModel = mongoose.model('Bot', BotSchema);
 
 module.exports = BotModel;
