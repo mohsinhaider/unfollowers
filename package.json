@@ -8,6 +8,9 @@
     "dev": "nodemon -r dotenv/config src/index.js",
     "test": "jest --setupFiles dotenv/config --runInBand"
   },
+  "jest": {
+    "testEnvironment": "node"
+  },
   "author": "Mohsin Haider",
   "license": "ISC",
   "dependencies": {
