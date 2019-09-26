@@ -13,6 +13,7 @@ module.exports = {
 
             const csrfTokenKey = 'csrftoken';
             const sessionIdKey = 'sessionid';
+            const userIdKey = 'ds_user_id';
 
             // Explicitly create a request Cookie jar for reuse throughout the request module calls
             let jar = request.jar();
@@ -48,9 +49,12 @@ module.exports = {
                     loginCsrfTokenCookieValue = loginCsrfTokenCookieValue.slice(0, -1);
 
                     let sessionIdCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, sessionIdKey);
+                    let userIdCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, userIdKey);
+                    userIdCookieValue = userIdCookieValue.slice(0, -1);
 
                     // Set an environment variable with the CSRF token retrieved at login time
                     process.env.SERVER_CSRF_TOKEN_VALUE = loginCsrfTokenCookieValue;
+                    process.env.SERVER_INSTAGRAM_USER_ID = userIdCookieValue;
                     process.env.SERVER_SESSION_ID_VALUE = sessionIdCookieValue;
 
                     // TODO: Add csrftoken and session id to bots collection under user process.env.SERVER_INSTAGRAM_USER_USERNAME
