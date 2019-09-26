@@ -1,4 +1,5 @@
 const request = require('request').defaults({ jar: true });
+const Bot = require('../models/bot');
 
 const { getCookieStringValue } = require('../helpers/login');
 const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
@@ -59,6 +60,12 @@ module.exports = {
 
                     // TODO: Add csrftoken and session id to bots collection under user process.env.SERVER_INSTAGRAM_USER_USERNAME
                     // Also add response headers expiry date
+                    Bot.findOneAndUpdate({ userId: process.env.SERVER_INSTAGRAM_USER_ID }, {
+                        sessionId: process.env.SERVER_SESSION_ID_VALUE,
+                        csrfToken: process.env.SERVER_CSRF_TOKEN_VALUE
+                    }, {
+                        upsert: true
+                    });
 
                     if (error) {
                         reject(error);
