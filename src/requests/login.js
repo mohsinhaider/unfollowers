@@ -49,7 +49,7 @@ module.exports = {
                     if (error) {
                         reject(error);
                     }
-                    
+
                     let loginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, csrfTokenKey);
                     loginCsrfTokenCookieValue = loginCsrfTokenCookieValue.slice(0, -1);
 
@@ -61,9 +61,8 @@ module.exports = {
                     process.env.SERVER_CSRF_TOKEN_VALUE = loginCsrfTokenCookieValue;
                     process.env.SERVER_INSTAGRAM_USER_ID = userIdCookieValue;
                     process.env.SERVER_SESSION_ID_VALUE = sessionIdCookieValue;
-
-                    // TODO: Add csrftoken and session id to bots collection under user process.env.SERVER_INSTAGRAM_USER_USERNAME
-                    // Also add response headers expiry date
+                    
+                    // TODO: use async/await
                     Bot.findOneAndUpdate({ userId: process.env.SERVER_INSTAGRAM_USER_ID }, {
                         userId: process.env.SERVER_INSTAGRAM_USER_ID,
                         username: process.env.SERVER_INSTAGRAM_USER_USERNAME,
@@ -74,7 +73,7 @@ module.exports = {
                         new: true
                     }, (error, document) => {
                         if (!error && document) {
-                            console.log(`Bot \'${SERVER_INSTAGRAM_USER_USERNAME}\' had its document upserted successfully.`);
+                            console.log(`Bot \'${process.env.SERVER_INSTAGRAM_USER_USERNAME}\' had its document upserted successfully.`);
                             reject(error);
                         }
                     });
