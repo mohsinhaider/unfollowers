@@ -46,6 +46,10 @@ module.exports = {
                     },
                     jar
                 }, (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    }
+                    
                     let loginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, csrfTokenKey);
                     loginCsrfTokenCookieValue = loginCsrfTokenCookieValue.slice(0, -1);
 
@@ -74,10 +78,6 @@ module.exports = {
                             reject(error);
                         }
                     });
-
-                    if (error) {
-                        reject(error);
-                    }
 
                     resolve(response);
                 });
