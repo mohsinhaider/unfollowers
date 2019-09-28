@@ -87,7 +87,7 @@ module.exports = {
                             new: true
                         });
 
-                        console.log(`Bot \'${process.env.SERVER_INSTAGRAM_USER_USERNAME}\' had its document upserted successfully.`);
+                        console.log(`Bot \'${process.env.SERVER_INSTAGRAM_USER_USERNAME}\' had new login secrets generated and upserted successfully.`);
                     }
                     catch (error) {
                         return reject(error);
