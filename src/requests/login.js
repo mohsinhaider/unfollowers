@@ -36,7 +36,7 @@ module.exports = {
                 headers: initialCsrfTokenHeaders,
                 url: process.env.INSTAGRAM_URI_GET_CSRF_TOKEN,
                 jar
-            }, (error, response, body) => {
+            }, async (error, response, body) => {
                 // Extract the cookie values that were populated in the request jar into an array
                 let preLoginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_GET_CSRF_TOKEN, csrfTokenKey);
 
@@ -57,7 +57,7 @@ module.exports = {
                         'password': process.env.SERVER_INSTAGRAM_USER_PASSWORD
                     },
                     jar
-                }, (error, response, body) => {
+                }, async (error, response, body) => {
                     if (error) {
                         reject(error);
                     }
@@ -75,20 +75,24 @@ module.exports = {
                     process.env.SERVER_SESSION_ID_VALUE = sessionIdCookieValue;
                     
                     // TODO: use async/await
-                    Bot.findOneAndUpdate({ userId: process.env.SERVER_INSTAGRAM_USER_ID }, {
-                        userId: process.env.SERVER_INSTAGRAM_USER_ID,
-                        username: process.env.SERVER_INSTAGRAM_USER_USERNAME,
-                        sessionId: process.env.SERVER_SESSION_ID_VALUE,
-                        csrfToken: process.env.SERVER_CSRF_TOKEN_VALUE
-                    }, {
-                        upsert: true, 
-                        new: true
-                    }, (error, document) => {
-                        if (!error && document) {
-                            console.log(`Bot \'${process.env.SERVER_INSTAGRAM_USER_USERNAME}\' had its document upserted successfully.`);
-                            reject(error);
-                        }
-                    });
+                    try {
+                        await Bot.findOneAndUpdate({ 
+                            userId: process.env.SERVER_INSTAGRAM_USER_ID 
+                        }, {
+                            userId: process.env.SERVER_INSTAGRAM_USER_ID,
+                            username: process.env.SERVER_INSTAGRAM_USER_USERNAME,
+                            sessionId: process.env.SERVER_SESSION_ID_VALUE,
+                            csrfToken: process.env.SERVER_CSRF_TOKEN_VALUE
+                        }, {
+                            upsert: true, 
+                            new: true
+                        });
+
+                        console.log(`Bot \'${process.env.SERVER_INSTAGRAM_USER_USERNAME}\' had its document upserted successfully.`);
+                    }
+                    catch (error) {
+                        reject(error);
+                    }
 
                     resolve(response);
                 });
