@@ -35,7 +35,7 @@ module.exports = {
             }, (error, response) => {
                 if (response.statusCode != 200 || error) {
                     // Request is malformed or Instagram could not respond successfully
-                    reject('Followers request completed unsuccessfully, response status code was not 200 or there was an error.')
+                    return reject('Followers request completed unsuccessfully, response status code was not 200 or there was an error.')
                 }
 
                 const responseObject = JSON.parse(response.body);
@@ -43,10 +43,10 @@ module.exports = {
 
                 if (followers.length == 0) { // TODO: Consider case where user has 0 followers.
                     // Authentication issue in Cookie header
-                    reject('Followers request completed unsuccessfully, response status code was 200, but edges array is empty.');
+                    return reject('Followers request completed unsuccessfully, response status code was 200, but edges array is empty.');
                 }
 
-                resolve(followers);
+                return resolve(followers);
             });
         })
     }
