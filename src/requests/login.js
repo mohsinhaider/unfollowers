@@ -7,10 +7,22 @@ const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
 module.exports = {
     login: async () => {
         return new Promise((resolve, reject) => {
-            // TODO: Check bots collection under process.env.SERVER_INSTAGRAM_USER_USERNAME to see if csrftoken and sessionid exist
-            // if we find existing auth info, then check if they've expired.
-                // if not expired, resolve.
-            // execute code blow if the tokens do not exist OR if they have expired.
+            const responseSuccess = 'Sucessfully fetched login secrets from storage or by loggin in';
+            
+            try {
+                const serverInstagramBot = await Bot.findOne({
+                    username: process.env.SERVER_INSTAGRAM_USER_USERNAME
+                });
+
+                process.env.SERVER_INSTAGRAM_USER_ID = serverInstagramBot.userId;
+                process.env.SERVER_SESSION_ID_VALUE = serverInstagramBot.sessionId;
+                process.env.SERVER_CSRF_TOKEN_VALUE = serverInstagramBot.csrfToken;
+
+                resolve(responseSuccess);
+            }
+            catch (error) {
+                console.log(`Bot ${process.env.SERVER_INSTAGRAM_USER_USERNAME} is missing login secrets, attempting to generate them now.`);
+            }
 
             const csrfTokenKey = 'csrftoken';
             const sessionIdKey = 'sessionid';
