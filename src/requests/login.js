@@ -7,7 +7,7 @@ const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
 module.exports = {
     login: async () => {
         return new Promise(async (resolve, reject) => {
-            const responseSuccess = 'Sucessfully retrieved login secrets from storage or by logging in';
+            const responseSuccess = 'Sucessfully retrieved login secrets from storage or by logging in.';
             
             try {
                 const serverInstagramBot = await Bot.findOne({
