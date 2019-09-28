@@ -6,7 +6,7 @@ const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
 
 module.exports = {
     login: async () => {
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
             const responseSuccess = 'Sucessfully fetched login secrets from storage or by loggin in';
             
             try {
@@ -28,7 +28,7 @@ module.exports = {
             const sessionIdKey = 'sessionid';
             const userIdKey = 'ds_user_id';
 
-            // Explicitly create a request Cookie jar for reuse throughout the request module calls
+            // Create a cookie jar to store cookies associated with requests
             let jar = request.jar();
 
             // Initial request to /web/__mid to get pre-login CSRF token
