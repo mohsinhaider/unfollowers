@@ -22,7 +22,7 @@ module.exports = {
                     'Cookie': sessionIdCookieKeyValuePair,
                     'Connection': 'keep-alive',
                     'Host': process.env.INSTAGRAM_URI_BASE_WWW,
-                    'Referer': 'https://www.instagram.com/roxy.tillerson/followers/',
+                    'Referer': `https://www.instagram.com/${process.env.SERVER_INSTAGRAM_USER_USERNAME}/followers/`,
                     'Sec-Fetch-Mode': 'cors',
                     'Sec-Fetch-Site': 'same-origin',
                     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36',
