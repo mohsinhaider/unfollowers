@@ -7,7 +7,7 @@ const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
 module.exports = {
     login: async () => {
         return new Promise(async (resolve, reject) => {
-            const responseSuccess = 'Sucessfully fetched login secrets from storage or by logging in';
+            const responseSuccess = 'Sucessfully retrieved login secrets from storage or by logging in';
             
             try {
                 const serverInstagramBot = await Bot.findOne({
@@ -18,7 +18,7 @@ module.exports = {
                 process.env.SERVER_SESSION_ID_VALUE = serverInstagramBot.sessionId;
                 process.env.SERVER_CSRF_TOKEN_VALUE = serverInstagramBot.csrfToken;
 
-                resolve(responseSuccess);
+                return resolve(responseSuccess);
             }
             catch (error) {
                 console.log(`Bot ${process.env.SERVER_INSTAGRAM_USER_USERNAME} is missing login secrets, attempting to generate them now.`);
@@ -74,7 +74,6 @@ module.exports = {
                     process.env.SERVER_INSTAGRAM_USER_ID = userIdCookieValue;
                     process.env.SERVER_SESSION_ID_VALUE = sessionIdCookieValue;
                     
-                    // TODO: use async/await
                     try {
                         await Bot.findOneAndUpdate({ 
                             userId: process.env.SERVER_INSTAGRAM_USER_ID 
@@ -91,10 +90,10 @@ module.exports = {
                         console.log(`Bot \'${process.env.SERVER_INSTAGRAM_USER_USERNAME}\' had its document upserted successfully.`);
                     }
                     catch (error) {
-                        reject(error);
+                        return reject(error);
                     }
 
-                    resolve(response);
+                    return resolve(responseSuccess);
                 });
             });
         })
