@@ -61,10 +61,18 @@ module.exports = {
                     // TODO: Add csrftoken and session id to bots collection under user process.env.SERVER_INSTAGRAM_USER_USERNAME
                     // Also add response headers expiry date
                     Bot.findOneAndUpdate({ userId: process.env.SERVER_INSTAGRAM_USER_ID }, {
+                        userId: process.env.SERVER_INSTAGRAM_USER_ID,
+                        username: process.env.SERVER_INSTAGRAM_USER_USERNAME,
                         sessionId: process.env.SERVER_SESSION_ID_VALUE,
                         csrfToken: process.env.SERVER_CSRF_TOKEN_VALUE
                     }, {
-                        upsert: true
+                        upsert: true, 
+                        new: true
+                    }, (error, document) => {
+                        if (!error && document) {
+                            console.log(`Bot \'${SERVER_INSTAGRAM_USER_USERNAME}\' had its document upserted successfully.`);
+                            reject(error);
+                        }
                     });
 
                     if (error) {
