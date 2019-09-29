@@ -22,7 +22,7 @@ module.exports = {
                     'Cookie': sessionIdCookieKeyValuePair,
                     'Connection': 'keep-alive',
                     'Host': process.env.INSTAGRAM_URI_BASE_WWW,
-                    'Referer': 'https://www.instagram.com/roxy.tillerson/followers/',
+                    'Referer': `https://www.instagram.com/${process.env.SERVER_INSTAGRAM_USER_USERNAME}/followers/`,
                     'Sec-Fetch-Mode': 'cors',
                     'Sec-Fetch-Site': 'same-origin',
                     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36',
@@ -35,7 +35,7 @@ module.exports = {
             }, (error, response) => {
                 if (response.statusCode != 200 || error) {
                     // Request is malformed or Instagram could not respond successfully
-                    reject('Followers request completed unsuccessfully, response status code was not 200 or there was an error.')
+                    return reject('Followers request completed unsuccessfully, response status code was not 200 or there was an error.')
                 }
 
                 const responseObject = JSON.parse(response.body);
@@ -43,10 +43,10 @@ module.exports = {
 
                 if (followers.length == 0) { // TODO: Consider case where user has 0 followers.
                     // Authentication issue in Cookie header
-                    reject('Followers request completed unsuccessfully, response status code was 200, but edges array is empty.');
+                    return reject('Followers request completed unsuccessfully, response status code was 200, but edges array is empty.');
                 }
 
-                resolve(followers);
+                return resolve(followers);
             });
         })
     }

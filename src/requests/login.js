@@ -6,17 +6,29 @@ const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
 
 module.exports = {
     login: async () => {
-        return new Promise((resolve, reject) => {
-            // TODO: Check bots collection under process.env.SERVER_INSTAGRAM_USER_USERNAME to see if csrftoken and sessionid exist
-            // if we find existing auth info, then check if they've expired.
-                // if not expired, resolve.
-            // execute code blow if the tokens do not exist OR if they have expired.
+        return new Promise(async (resolve, reject) => {
+            const responseSuccess = 'Sucessfully retrieved login secrets from storage or by logging in.';
+            
+            try {
+                const serverInstagramBot = await Bot.findOne({
+                    username: process.env.SERVER_INSTAGRAM_USER_USERNAME
+                });
+
+                process.env.SERVER_INSTAGRAM_USER_ID = serverInstagramBot.userId;
+                process.env.SERVER_SESSION_ID_VALUE = serverInstagramBot.sessionId;
+                process.env.SERVER_CSRF_TOKEN_VALUE = serverInstagramBot.csrfToken;
+
+                return resolve(responseSuccess);
+            }
+            catch (error) {
+                console.log(`Bot ${process.env.SERVER_INSTAGRAM_USER_USERNAME} is missing login secrets, attempting to generate them now.`);
+            }
 
             const csrfTokenKey = 'csrftoken';
             const sessionIdKey = 'sessionid';
             const userIdKey = 'ds_user_id';
 
-            // Explicitly create a request Cookie jar for reuse throughout the request module calls
+            // Create a cookie jar to store cookies associated with requests
             let jar = request.jar();
 
             // Initial request to /web/__mid to get pre-login CSRF token
@@ -24,7 +36,7 @@ module.exports = {
                 headers: initialCsrfTokenHeaders,
                 url: process.env.INSTAGRAM_URI_GET_CSRF_TOKEN,
                 jar
-            }, (error, response, body) => {
+            }, async (error, response, body) => {
                 // Extract the cookie values that were populated in the request jar into an array
                 let preLoginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_GET_CSRF_TOKEN, csrfTokenKey);
 
@@ -45,7 +57,11 @@ module.exports = {
                         'password': process.env.SERVER_INSTAGRAM_USER_PASSWORD
                     },
                     jar
-                }, (error, response, body) => {
+                }, async (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    }
+
                     let loginCsrfTokenCookieValue = getCookieStringValue(jar, process.env.INSTAGRAM_URI_BASE_HTTPS_WWW, csrfTokenKey);
                     loginCsrfTokenCookieValue = loginCsrfTokenCookieValue.slice(0, -1);
 
@@ -57,21 +73,27 @@ module.exports = {
                     process.env.SERVER_CSRF_TOKEN_VALUE = loginCsrfTokenCookieValue;
                     process.env.SERVER_INSTAGRAM_USER_ID = userIdCookieValue;
                     process.env.SERVER_SESSION_ID_VALUE = sessionIdCookieValue;
+                    
+                    try {
+                        await Bot.findOneAndUpdate({ 
+                            userId: process.env.SERVER_INSTAGRAM_USER_ID 
+                        }, {
+                            userId: process.env.SERVER_INSTAGRAM_USER_ID,
+                            username: process.env.SERVER_INSTAGRAM_USER_USERNAME,
+                            sessionId: process.env.SERVER_SESSION_ID_VALUE,
+                            csrfToken: process.env.SERVER_CSRF_TOKEN_VALUE
+                        }, {
+                            upsert: true, 
+                            new: true
+                        });
 
-                    // TODO: Add csrftoken and session id to bots collection under user process.env.SERVER_INSTAGRAM_USER_USERNAME
-                    // Also add response headers expiry date
-                    Bot.findOneAndUpdate({ userId: process.env.SERVER_INSTAGRAM_USER_ID }, {
-                        sessionId: process.env.SERVER_SESSION_ID_VALUE,
-                        csrfToken: process.env.SERVER_CSRF_TOKEN_VALUE
-                    }, {
-                        upsert: true
-                    });
-
-                    if (error) {
-                        reject(error);
+                        console.log(`Bot \'${process.env.SERVER_INSTAGRAM_USER_USERNAME}\' had new login secrets generated and upserted successfully.`);
+                    }
+                    catch (error) {
+                        return reject(error);
                     }
 
-                    resolve(response);
+                    return resolve(responseSuccess);
                 });
             });
         })
