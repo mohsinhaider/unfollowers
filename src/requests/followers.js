@@ -4,13 +4,15 @@ const { userid } = require('./userid');
 module.exports = {
     followers: (targetInstagramUsername, csrfToken, sessionId) => {
         return new Promise(async (resolve, reject) => {
+            let instagramUserId;
             try {
-                var instagramUserId = await userid(targetInstagramUsername);
+                instagramUserId = await userid(targetInstagramUsername);
             }
             catch (error) {
                 return reject(error);
             }
 
+            // Setup query string and payload for Instagram followers request
             const followersGraphqlQueryHash = 'c76146de99bb02f6415203be841dd25a';
             const followersVariables = {
                 id: instagramUserId,
@@ -18,10 +20,10 @@ module.exports = {
                 fetch_mutual: true,
                 first: 24
             }
-
             const followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`;
             const sessionIdCookieKeyValuePair = 'sessionid=' + sessionId + ';';
 
+            // Instagram user ID is guarentee to be stored in `instagramUserId` before this request is sent
             request.get({
                 headers: {
                     'Accept': '*/*',
@@ -41,18 +43,18 @@ module.exports = {
                 gzip: true,
                 url: followersRequestUrl
             }, (error, response) => {
+                // Breaking Instagram followers endpoint changes
                 if (response.statusCode != 200 || error) {
-                    // Request is malformed or Instagram could not respond successfully
-                    return reject('Followers request completed unsuccessfully, response status code was not 200 or there was an error.')
+                    return reject('Instagram followers service could not successfully respond.')
                 }
                 
                 // Should be in try-catch if properties change
                 const responseObject = JSON.parse(response.body);
                 const followers = responseObject['data']['user']['edge_followed_by']['edges'];
 
-                if (followers.length == 0) { // TODO: Consider case where user has 0 followers.
-                    // Authentication issue in Cookie header
-                    return reject('Followers request completed unsuccessfully, response status code was 200, but edges array is empty.');
+                // Expired sessionid or csrftoken; authentication issue in Cookie header; user has 0 followers
+                if (followers.length == 0) { // TODO: Fix 0 followers case
+                    return reject('Instagram followers service could not successfully respond.');
                 }
 
                 return resolve(followers);
