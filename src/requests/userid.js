@@ -3,21 +3,34 @@ const request = require('request');
 module.exports = {
     userid: (username) => {
         return new Promise((resolve, reject) => {
+            // User metadata URL format: 'https://www.instagram.com/{username}/?__a=1'
             const instagramUserMetadataUriQueryString = '?__a=1';
             const instagramUserMetadataUri = process.env.INSTAGRAM_URI_BASE_HTTPS_WWW + '/' + username + '/' + instagramUserMetadataUriQueryString;
 
             request.get({
                 url: instagramUserMetadataUri
             }, (error, response) => {
+                // User does not exist or metadata endpoint has been removed/changed
                 if (response.statusCode === 404) {
                     return reject('Instagram user does not exist.');
                 }
-
+                
+                // Request did not yield the expected response
                 if (error || response.statusCode != 200) {
                     return reject('Instagram user metadata endpoint could not respond with success.');
                 }
 
+                let instagramUserId;
                 const responseObject = JSON.parse(response.body);
+
+                try {
+                    instagramUserId = responseObject.graphql.user.id
+                }
+                catch (error) {
+                    // Object structure is not as expected; may have changed
+                    return reject('Instagram user metadata could not be successfully prepared.')
+                }
+
                 return resolve(responseObject.graphql.user.id);
             })
         }) ;
