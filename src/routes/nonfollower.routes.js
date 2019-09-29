@@ -10,11 +10,12 @@ const router = express.Router();
  * @name POST/api/nonfollowers
 */
 router.post('/', async (req, res) => {
-    const targetInstagramUser = "";
+    const targetInstagramUser = req.body.username;
+    console.log(targetInstagramUser)
 
     try {
         let followersList = await followers(process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
-        console.log(followersList);
+        //console.log(followersList);
         res.sendStatus(200);
     }
     catch (error) {
