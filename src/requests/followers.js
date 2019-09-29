@@ -3,12 +3,17 @@ const { userid } = require('./userid');
 
 module.exports = {
     followers: (targetInstagramUsername, csrfToken, sessionId) => {
-        return new Promise((resolve, reject) => {
-            userid(targetInstagramUsername);
+        return new Promise(async (resolve, reject) => {
+            try {
+                var instagramUserId = await userid(targetInstagramUsername);
+            }
+            catch (error) {
+                return reject(error);
+            }
 
             const followersGraphqlQueryHash = 'c76146de99bb02f6415203be841dd25a';
             const followersVariables = {
-                id: '19288260011',
+                id: instagramUserId,
                 include_reel: true,
                 fetch_mutual: true,
                 first: 24
@@ -40,7 +45,8 @@ module.exports = {
                     // Request is malformed or Instagram could not respond successfully
                     return reject('Followers request completed unsuccessfully, response status code was not 200 or there was an error.')
                 }
-
+                
+                // Should be in try-catch if properties change
                 const responseObject = JSON.parse(response.body);
                 const followers = responseObject['data']['user']['edge_followed_by']['edges'];
 
