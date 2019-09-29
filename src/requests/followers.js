@@ -1,8 +1,11 @@
 const request = require('request');
+const { userid } = require('./userid');
 
 module.exports = {
-    followers: (csrfToken, sessionId) => {
+    followers: (targetInstagramUsername, csrfToken, sessionId) => {
         return new Promise((resolve, reject) => {
+            userid(targetInstagramUsername);
+
             const followersGraphqlQueryHash = 'c76146de99bb02f6415203be841dd25a';
             const followersVariables = {
                 id: '19288260011',
