@@ -6,7 +6,7 @@
  */
 
 const { userid } = require('../../src/requests/userid');
-const { USERID_TEST_USERNAME } = require('../constants/constants');
+const { REQUESTS_TEST_USERNAME } = require('../constants/constants');
 
 test('Should retrieve id of an existing Instagram user', async () => {
     const instagramUserId = await userid(USERID_TEST_USERNAME);

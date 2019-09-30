@@ -1,3 +1,3 @@
 module.exports = {
-    USERID_TEST_USERNAME: 'instagram'
+    REQUESTS_TEST_USERNAME: 'instagram'
 };
