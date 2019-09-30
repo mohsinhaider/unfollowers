@@ -5,7 +5,7 @@
  * @author Mohsin Haider
  */
 
-const { userid } = require('../src/requests/userid');
+const { userid } = require('../../src/requests/userid');
 
 test('Should retrieve id of an existing Instagram user', async () => {
     const instagramUserId = await userid('instagram');
