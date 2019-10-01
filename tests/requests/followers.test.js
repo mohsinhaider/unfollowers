@@ -1,24 +1,27 @@
 /**
  * @file followers.test.js 
- * Tests the followers() request function, which retrieves the followers of an Instagram user.
+ * Tests the /nonfollower/follower GET endpoint, a route developed to provide test coverage for the followers() function.
  *
  * @author Mohsin Haider
  */
 
-const { followers } = require('../../src/requests/followers');
-const { REQUESTS_TEST_USERNAME } = require('../constants/constants');
-const setup = require('../fixtures/setup');
+const app = require('../../src/app');
+const supertest = require('supertest');
 
-jest.setTimeout(20000);
-
-beforeAll(async () => {
-    await setup();
+beforeAll(async (done) => {
+    await supertest(app)
+        .get('/api/login')
+        .expect(200);
+    
+    done();
 });
 
 test('Should retrieve followers of an existing Instagram user', async () => {
-    const followersList = await followers(REQUESTS_TEST_USERNAME, 
-        process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
-    console.debug(followersList);
-    expect(followersList[0].length).toBe(24);
+    await supertest(app)
+        .get('/api/nonfollower/follower')
+        .query({
+            username: 'instagram'
+        })
+        .expect(200);
 });
 

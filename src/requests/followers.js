@@ -1,5 +1,6 @@
 const request = require('request');
 const { userid } = require('./userid');
+const { FOLLOWERS_REQUEST_ERROR } = require('../constants/responses');
 
 module.exports = {
     followers: (targetInstagramUsername, csrfToken, sessionId) => {
@@ -45,7 +46,7 @@ module.exports = {
             }, (error, response) => {
                 // Breaking Instagram followers endpoint changes
                 if (response.statusCode != 200 || error) {
-                    return reject('Instagram followers service could not successfully respond.')
+                    return reject(FOLLOWERS_REQUEST_ERROR);
                 }
                 
                 // Should be in try-catch if properties change
@@ -54,7 +55,7 @@ module.exports = {
 
                 // Expired sessionid or csrftoken; authentication issue in Cookie header; user has 0 followers
                 if (followers.length == 0) { // TODO: Fix 0 followers case
-                    return reject('Instagram followers service could not successfully respond.');
+                    return reject(FOLLOWERS_REQUEST_ERROR);
                 }
 
                 return resolve(followers);
