@@ -1,4 +1,6 @@
 const request = require('request');
+const { USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC, USERID_REQUEST_ERROR_404 } 
+    = require('../constants/responses');
 
 module.exports = {
     userid: (username) => {
@@ -12,12 +14,12 @@ module.exports = {
             }, (error, response) => {
                 // User does not exist or metadata endpoint has been removed/changed
                 if (response.statusCode === 404) {
-                    return reject('Instagram user does not exist.');
+                    return reject(USERID_REQUEST_ERROR_404);
                 }
                 
                 // Request did not yield the expected response
                 if (error || response.statusCode != 200) {
-                    return reject('Instagram user metadata endpoint could not respond with success.');
+                    return reject(USERID_REQUEST_ERROR);
                 }
 
                 let instagramUserId;
@@ -28,7 +30,7 @@ module.exports = {
                 }
                 catch (error) {
                     // Object structure is not as expected; may have changed
-                    return reject('Instagram user metadata could not be successfully prepared.')
+                    return reject(USERID_REQUEST_ERROR_LOGIC);
                 }
 
                 return resolve(responseObject.graphql.user.id);
