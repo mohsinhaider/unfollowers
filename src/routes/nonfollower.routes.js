@@ -1,5 +1,7 @@
 const express = require('express');
 const { followers } = require('../requests/followers');
+const { FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC } 
+    = require('../constants/responses');
 
 const router = express.Router();
 
@@ -30,7 +32,8 @@ router.get('/follower', async (req, res) => {
     try {
         followersList = await followers(targetInstagramUsername, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
     } catch (error) {
-        if (error === 'Instagram followers service could not successfully respond.') {
+        const errorResponseMessages = [FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC];
+        if (errorResponseMessages.indexOf(error) !== -1) {
             res.status(500).send(error);
         }
         else {
