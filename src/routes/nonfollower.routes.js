@@ -42,6 +42,6 @@ router.get('/follower', async (req, res) => {
     }
 
     res.status(200).send(followersList);
-})
+});
 
 module.exports = router;
