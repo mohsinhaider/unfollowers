@@ -1,5 +1,5 @@
 const request = require('request');
-const { userid } = require('./userid');
+const { metadata } = require('./metadata');
 const { followersHeaders } = require('../constants/headers');
 const { FOLLOWERS_REQUEST_ERROR } = require('../constants/responses');
 
@@ -8,7 +8,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let instagramUserId;
             try {
-                instagramUserId = await userid(targetInstagramUsername);
+                instagramUserId = await metadata(targetInstagramUsername);
             }
             catch (error) {
                 return reject(error);
