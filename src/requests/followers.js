@@ -1,5 +1,6 @@
 const request = require('request');
 const { userid } = require('./userid');
+const { followersHeaders } = require('../constants/headers');
 const { FOLLOWERS_REQUEST_ERROR } = require('../constants/responses');
 
 module.exports = {
@@ -24,23 +25,12 @@ module.exports = {
             const followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`;
             const sessionIdCookieKeyValuePair = 'sessionid=' + sessionId + ';';
 
+            followersHeaders['Cookie'] = sessionIdCookieKeyValuePair;
+            followersHeaders['X-CSRFToken'] = csrfToken;
+
             // Instagram user ID is guarentee to be stored in `instagramUserId` before this request is sent
             request.get({
-                headers: {
-                    'Accept': '*/*',
-                    'Accept-Encoding': 'gzip, deflate, br',
-                    'Accept-Language': 'en-US,en;q=0.9',
-                    'Cookie': sessionIdCookieKeyValuePair,
-                    'Connection': 'keep-alive',
-                    'Host': process.env.INSTAGRAM_URI_BASE_WWW,
-                    'Referer': `https://www.instagram.com/${process.env.SERVER_INSTAGRAM_USER_USERNAME}/followers/`,
-                    'Sec-Fetch-Mode': 'cors',
-                    'Sec-Fetch-Site': 'same-origin',
-                    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36',
-                    'X-CSRFToken': csrfToken,
-                    'X-IG-App-ID': '936619743392459',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
+                headers: followersHeaders,
                 gzip: true,
                 url: followersRequestUrl
             }, (error, response) => {
