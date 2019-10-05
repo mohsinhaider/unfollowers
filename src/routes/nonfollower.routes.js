@@ -27,11 +27,12 @@ router.post('/', async (req, res) => {
 */
 router.get('/follower', async (req, res) => {
     const targetInstagramUsername = req.query.username;
-
     let followersList;
+    
     try {
         followersList = await followers(targetInstagramUsername, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
-    } catch (error) {
+    } 
+    catch (error) {
         const errorResponseMessages = [FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC];
         if (errorResponseMessages.indexOf(error) !== -1) {
             res.status(500).send(error);

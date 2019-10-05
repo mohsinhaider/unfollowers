@@ -33,7 +33,7 @@ module.exports = {
                     return reject(USERID_REQUEST_ERROR_LOGIC);
                 }
 
-                return resolve(responseObject.graphql.user.id);
+                return resolve(responseObject.graphql.user);
             })
         }) ;
     }

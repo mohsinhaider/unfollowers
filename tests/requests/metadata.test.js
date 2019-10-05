@@ -9,6 +9,6 @@ const { metadata } = require('../../src/requests/metadata');
 const { REQUESTS_TEST_USERNAME } = require('../constants/constants');
 
 test('Should retrieve id of an existing Instagram user', async () => {
-    const instagramUserId = await metadata(REQUESTS_TEST_USERNAME);
-    expect(instagramUserId).toBe('25025320');
+    const instagramUser = await metadata(REQUESTS_TEST_USERNAME);
+    expect(instagramUser.id).toBe('25025320');
 });
