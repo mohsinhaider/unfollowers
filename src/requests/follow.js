@@ -1,5 +1,5 @@
 const request = require('request');
-const { followHeaders } = require('../headers/headers');
+const { followHeaders } = require('../constants/headers');
 
 module.exports = {
     // Example usage in index.js: follow('1369572015', HEADERS_FOLLOW, jar);
