@@ -2,7 +2,7 @@ const request = require('request').defaults({ jar: true });
 const Bot = require('../models/bot');
 
 const { getCookieStringValue } = require('../helpers/login');
-const { initialCsrfTokenHeaders, loginHeaders } = require('../helpers/headers');
+const { initialCsrfTokenHeaders, loginHeaders } = require('../constants/headers');
 
 module.exports = {
     login: async () => {
