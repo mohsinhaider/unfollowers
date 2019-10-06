@@ -3,7 +3,7 @@ const { USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC, USERID_REQUEST_ERROR_4
     = require('../constants/responses');
 
 module.exports = {
-    userid: (username) => {
+    metadata: (username) => {
         return new Promise((resolve, reject) => {
             // User metadata URL format: 'https://www.instagram.com/{username}/?__a=1'
             const instagramUserMetadataUriQueryString = '?__a=1';
@@ -33,7 +33,7 @@ module.exports = {
                     return reject(USERID_REQUEST_ERROR_LOGIC);
                 }
 
-                return resolve(responseObject.graphql.user.id);
+                return resolve(responseObject.graphql.user);
             })
         }) ;
     }

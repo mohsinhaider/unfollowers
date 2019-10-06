@@ -1,14 +1,14 @@
 const request = require('request');
-const { userid } = require('./userid');
+const { metadata } = require('./metadata');
 const { followersHeaders } = require('../constants/headers');
 const { FOLLOWERS_REQUEST_ERROR } = require('../constants/responses');
 
 module.exports = {
     followers: (targetInstagramUsername, csrfToken, sessionId) => {
         return new Promise(async (resolve, reject) => {
-            let instagramUserId;
+            let instagramUserMetadata;
             try {
-                instagramUserId = await userid(targetInstagramUsername);
+                instagramUserMetadata = await metadata(targetInstagramUsername);
             }
             catch (error) {
                 return reject(error);
@@ -17,7 +17,7 @@ module.exports = {
             // Setup query string and payload for Instagram followers request
             const followersGraphqlQueryHash = 'c76146de99bb02f6415203be841dd25a';
             const followersVariables = {
-                id: instagramUserId,
+                id: instagramUserMetadata.id,
                 include_reel: true,
                 fetch_mutual: true,
                 first: 24
