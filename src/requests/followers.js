@@ -9,6 +9,11 @@ const { requestWrapper } = require('./requestwrapper');
 module.exports = {
     followers: (targetInstagramUsername, csrfToken, sessionId) => {
         return new Promise(async (resolve, reject) => {
+            // Set up request authentication from the get go
+            const sessionIdCookieKeyValuePair = 'sessionid=' + sessionId + ';';
+            followersHeaders['Cookie'] = sessionIdCookieKeyValuePair;
+            followersHeaders['X-CSRFToken'] = csrfToken;
+
             // Store metadata object to get user properties needed for this request
             let instagramUserMetadata;
             try {
@@ -18,7 +23,7 @@ module.exports = {
                 return reject(error);
             }
 
-            // Set the follower request batch size
+            // Set the number of followers to fetch at a time (batch count)
             const followerBatchCount = 20;
 
             // Setup query string and payload for Instagram followers request
@@ -28,14 +33,8 @@ module.exports = {
                 include_reel: true,
                 fetch_mutual: true,
                 first: followerBatchCount
-                // after: "END_CURSOR_HERE"
             }
             let followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`;
-            
-            // Add authentication tokens to request header object
-            const sessionIdCookieKeyValuePair = 'sessionid=' + sessionId + ';';
-            followersHeaders['Cookie'] = sessionIdCookieKeyValuePair;
-            followersHeaders['X-CSRFToken'] = csrfToken;
 
             // Set number of followers to grab in total and calculate total number of needed requests
             const totalFollowerCount = instagramUserMetadata.edge_followed_by.count;
