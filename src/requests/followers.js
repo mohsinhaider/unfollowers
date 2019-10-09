@@ -60,11 +60,13 @@ module.exports = {
                         // TODO: Should be in try-catch if properties change
                         const responseObject = JSON.parse(response.body);
                         const followersBatch = responseObject['data']['user']['edge_followed_by']['edges'];
-
+                        
+                        // DEBUG -- TODO: Remove code after debug
                         for (let j = 0; j < followersBatch.length; j++) {
                             console.log(followersBatch[j]['node']['username']);
                         }
                         console.log('~~----~~~----~~~---~~~~-----~~~~~----~~~~~----')
+                        // END OF DEBUG
         
                         // Expired sessionid or csrftoken; authentication issue in Cookie header; user has 0 followers
                         if (followersBatch.length == 0) { // TODO: Fix 0 followers case
@@ -76,7 +78,7 @@ module.exports = {
                         
                         // Push current batch of followers onto existing followers array; do not create new array
                         followers.push.apply(followers, followersBatch);
-                        // console.log(`Iteration #${i} | ${followersBatch.length} followers found`);
+
                         resolve();
                     });
                 });
@@ -90,10 +92,8 @@ module.exports = {
                 }
 
                 await requestWrapper(() => requestTask(followersRequestUrl));
-                //console.log('----');
 
-                // TODO: if i+1 will equal batchRequestCount AND followers.length != totalFollowerCount, making 1 MORE request to get the last set of followers.
-                // Issue with Instagram API, sometimes it will return less than the follower batch size. Alternative could be to sleep, try that first? (might make for worse user experience).
+                // TODO: Calculate number of extra requests needed to recover 'dropped' followers
             }
         })
     }
