@@ -56,7 +56,6 @@ module.exports = {
                 followers.push.apply(followers, taskResults.followers);
                 queryEndCursor = taskResults.queryEndCursor;
 
-                // TODO: Calculate number of extra requests needed to recover 'dropped' followers
                 if (!isExtraRequestBatchSet && i + 1 === batchRequestCount && followers.length !== totalFollowerCount) {
                     let followerDelta = totalFollowerCount - followers.length;
                     let extraRequestsCount = Math.ceil(followerDelta / followerBatchCount);
