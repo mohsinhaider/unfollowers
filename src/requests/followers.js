@@ -1,19 +1,16 @@
-const request = require('request');
-const { metadata } = require('./metadata');
 const { followersHeaders } = require('../constants/headers');
-const { FOLLOWERS_REQUEST_ERROR } = require('../constants/responses');
 const { followersRequestTask } = require('../helpers/followers');
-const fs = require('fs');
+const { metadata } = require('./metadata');
 
 module.exports = {
     followers: (targetInstagramUsername, csrfToken, sessionId) => {
         return new Promise(async (resolve, reject) => {
-            // Set up request authentication from the get go
+            // Establish request authentication
             const sessionIdCookieKeyValuePair = 'sessionid=' + sessionId + ';';
             followersHeaders['Cookie'] = sessionIdCookieKeyValuePair;
             followersHeaders['X-CSRFToken'] = csrfToken;
 
-            // Store metadata object to get user properties needed for this request
+            // Acquire user properties needed for this request
             let instagramUserMetadata;
             try {
                 instagramUserMetadata = await metadata(targetInstagramUsername);
@@ -52,10 +49,19 @@ module.exports = {
                     followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`
                 }
 
-                const taskResults = await followersRequestTask(followersRequestUrl);
-                followers.push.apply(followers, taskResults.followers);
-                queryEndCursor = taskResults.queryEndCursor;
+                let taskResults = null;
+                try {
+                    taskResults = await followersRequestTask(followersRequestUrl);
+                    followers.push.apply(followers, taskResults.followers);
+                    queryEndCursor = taskResults.queryEndCursor;
+                }
+                catch (error) {
+                    reject(error);
+                }
 
+                // Logic to send a single set of requests by checking a set has not been sent yet, and if the
+                // accumulated followers array length is not the same amount as the target total. Done in the
+                // last iteration to pick up any 'dropped' followers.
                 if (!isExtraRequestBatchSet && i + 1 === batchRequestCount && followers.length !== totalFollowerCount) {
                     let followerDelta = totalFollowerCount - followers.length;
                     let extraRequestsCount = Math.ceil(followerDelta / followerBatchCount);
@@ -65,6 +71,6 @@ module.exports = {
             }
             
             resolve(followers);
-        })
+        });
     }
 }
