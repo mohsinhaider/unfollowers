@@ -20,7 +20,7 @@ test('Should retrieve followers of an existing Instagram user', async () => {
     await supertest(app)
         .get('/api/nonfollower/follower')
         .query({
-            username: 'instagram'
+            username: 'roxy.tillerson'
         })
         .expect(200);
 });
