@@ -2,6 +2,7 @@ const request = require('request');
 const { metadata } = require('./metadata');
 const { followersHeaders } = require('../constants/headers');
 const { FOLLOWERS_REQUEST_ERROR } = require('../constants/responses');
+const { followersRequestTask } = require('../helpers/followers');
 const fs = require('fs');
 
 module.exports = {
@@ -42,44 +43,6 @@ module.exports = {
             // is known as the 'end_cursor', and will change with every subsequent request -- it is a pointer to first follower in next batch
             let followers = [];
             let queryEndCursor = '';
-
-            let requestTask = (requestUrl) => {
-                return new Promise((resolve, reject) => {
-                    request.get({
-                        headers: followersHeaders,
-                        gzip: true,
-                        url: requestUrl
-                    }, (error, response) => {
-                        // Breaking Instagram followers endpoint changes
-                        if (response.statusCode != 200 || error) {
-                            return reject(FOLLOWERS_REQUEST_ERROR);
-                        }
-                        
-                        // TODO: Should be in try-catch if properties change
-                        const responseObject = JSON.parse(response.body);
-                        const followersBatch = responseObject['data']['user']['edge_followed_by']['edges'];
-        
-                        // Expired sessionid or csrftoken; authentication issue in Cookie header; user has 0 followers
-                        if (followersBatch.length == 0) { // TODO: Fix 0 followers case
-                            return reject(FOLLOWERS_REQUEST_ERROR);
-                        }
-
-                        // DEBUG -- TODO: Remove logging code after debug
-                        for (let j = 0; j < followersBatch.length; j++) {
-                            followers.push(followersBatch[j]['node']['username']);
-                            console.log(followersBatch[j]['node']['username']);
-                        }
-                        console.log('~~----~~~----~~~---~~~~-----~~~~~----~~~~~----')
-                        // END OF DEBUG
-
-                        // Update end cursor, to be used in next immediate request's query string to point cursor to next batch
-                        queryEndCursor = responseObject['data']['user']['edge_followed_by']['page_info']['end_cursor'];
-
-                        resolve();
-                    });
-                });
-            }
-
             let isExtraRequestBatchSet = false;
 
             // Instagram user ID is guarenteed to be stored in `instagramUserId` before this request is sent
@@ -89,7 +52,9 @@ module.exports = {
                     followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`
                 }
 
-                await requestTask(followersRequestUrl);
+                const taskResults = await followersRequestTask(followersRequestUrl);
+                followers.push.apply(followers, taskResults.followers);
+                queryEndCursor = taskResults.queryEndCursor;
 
                 // TODO: Calculate number of extra requests needed to recover 'dropped' followers
                 if (!isExtraRequestBatchSet && i + 1 === batchRequestCount && followers.length !== totalFollowerCount) {
