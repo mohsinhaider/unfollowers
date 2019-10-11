@@ -4,8 +4,6 @@ const { followersHeaders } = require('../constants/headers');
 const { FOLLOWERS_REQUEST_ERROR } = require('../constants/responses');
 const fs = require('fs');
 
-const { requestWrapper } = require('./requestwrapper');
-
 module.exports = {
     followers: (targetInstagramUsername, csrfToken, sessionId) => {
         return new Promise(async (resolve, reject) => {
@@ -91,7 +89,7 @@ module.exports = {
                     followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`
                 }
 
-                await requestWrapper(() => requestTask(followersRequestUrl));
+                await requestTask(followersRequestUrl);
 
                 // TODO: Calculate number of extra requests needed to recover 'dropped' followers
                 if (!isExtraRequestBatchSet && i + 1 === batchRequestCount && followers.length !== totalFollowerCount) {
@@ -101,7 +99,7 @@ module.exports = {
                     isExtraRequestBatchSet = true;
                 }
             }
-
+            
             resolve(followers);
         })
     }
