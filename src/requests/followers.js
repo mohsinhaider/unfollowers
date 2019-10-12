@@ -3,21 +3,12 @@ const { followersRequestTask } = require('../helpers/followers');
 const { metadata } = require('./metadata');
 
 module.exports = {
-    followers: (targetInstagramUsername, csrfToken, sessionId) => {
+    followers: (targetInstagramUserMetadata, csrfToken, sessionId) => {
         return new Promise(async (resolve, reject) => {
             // Establish request authentication
             const sessionIdCookieKeyValuePair = 'sessionid=' + sessionId + ';';
             followersHeaders['Cookie'] = sessionIdCookieKeyValuePair;
             followersHeaders['X-CSRFToken'] = csrfToken;
-
-            // Acquire user properties needed for this request
-            let instagramUserMetadata;
-            try {
-                instagramUserMetadata = await metadata(targetInstagramUsername);
-            }
-            catch (error) {
-                return reject(error);
-            }
 
             // Set the number of followers to fetch at a time (batch count)
             const followerBatchCount = 20;
@@ -25,7 +16,7 @@ module.exports = {
             // Setup query string and payload for Instagram followers request
             const followersGraphqlQueryHash = 'c76146de99bb02f6415203be841dd25a';
             let followersVariables = {
-                id: instagramUserMetadata.id,
+                id: targetInstagramUserMetadata.id,
                 include_reel: true,
                 fetch_mutual: true,
                 first: followerBatchCount
@@ -33,7 +24,7 @@ module.exports = {
             let followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`;
 
             // Set number of followers to grab in total and calculate total number of needed requests
-            const totalFollowerCount = instagramUserMetadata.edge_followed_by.count;
+            const totalFollowerCount = targetInstagramUserMetadata.edge_followed_by.count;
             let batchRequestCount = Math.ceil(totalFollowerCount / followerBatchCount);
 
             // Initialize array to store followers retrieved and string to hold the 'after' query string parameter's value, which 

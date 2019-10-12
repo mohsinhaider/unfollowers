@@ -1,5 +1,6 @@
 const express = require('express');
 const { followers } = require('../requests/followers');
+const { metadata } = require('../requests/metadata');
 const { FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC } 
     = require('../constants/responses');
 
@@ -13,7 +14,8 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     const targetInstagramUsername = req.body.username;
     try {
-        const followersList = await followers(targetInstagramUsername, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
+        const instagramUserMetadata = await metadata(targetInstagramUsername);
+        const followersList = await followers(instagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
         res.sendStatus(200);
     }
     catch (error) {
@@ -30,7 +32,8 @@ router.get('/follower', async (req, res) => {
     let followersList;
     
     try {
-        followersList = await followers(targetInstagramUsername, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
+        const instagramUserMetadata = await metadata(targetInstagramUsername);
+        followersList = await followers(instagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
     } 
     catch (error) {
         const errorResponseMessages = [FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC];
