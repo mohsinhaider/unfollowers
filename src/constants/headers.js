@@ -57,5 +57,18 @@ module.exports = {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36',
         'X-IG-App-ID': '936619743392459',
         'X-Requested-With': 'XMLHttpRequest'
+    },
+    followingHeaders: {
+        'Accept': '*/*',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Accept-Language': 'en-US,en;q=0.9',
+        'Connection': 'keep-alive',
+        'Host': process.env.INSTAGRAM_URI_BASE_WWW,
+        'Referer': `https://www.instagram.com/${process.env.SERVER_INSTAGRAM_USER_USERNAME}/following/`,
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.79 Safari/537.36',
+        'X-IG-App-ID': '936619743392459',
+        'X-Requested-With': 'XMLHttpRequest'
     }
 }
