@@ -1,5 +1,6 @@
 const express = require('express');
 const { followers } = require('../requests/followers');
+const { following } = require('../requests/following');
 const { metadata } = require('../requests/metadata');
 const { FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC } 
     = require('../constants/responses');
@@ -13,10 +14,27 @@ const router = express.Router();
 */
 router.post('/', async (req, res) => {
     const targetInstagramUsername = req.body.username;
+    let followerUsernames, followingUsernames, nonfollowerUsernames = [];
     try {
         const instagramUserMetadata = await metadata(targetInstagramUsername);
-        const followersList = await followers(instagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
-        res.sendStatus(200);
+
+        // Execute requests to get follower and following users together
+        Promise.all([
+            followers(instagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE),
+            following(instagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE)
+        ]).then(result => {
+            followerUsernames = result[0];
+            followingUsernames = result[1];
+
+            // For each user following, check if they are a follower, if not, they are a 'nonfollower'
+            followingUsernames.forEach(user => {
+                if (!followerUsernames.includes(user)) {
+                    nonfollowerUsernames.push(user);
+                }
+            });
+
+            res.status(200).send(nonfollowerUsernames);
+        });
     }
     catch (error) {
         res.status(500).send(error);
@@ -30,7 +48,6 @@ router.post('/', async (req, res) => {
 router.get('/follower', async (req, res) => {
     const targetInstagramUsername = req.query.username;
     let followersList;
-    
     try {
         const instagramUserMetadata = await metadata(targetInstagramUsername);
         followersList = await followers(instagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
