@@ -1,3 +1,4 @@
+const { delay } = require('../helpers/delay');
 const { followingHeaders } = require('../constants/headers');
 const { followingRequestTask } = require('../helpers/following');
 
@@ -33,6 +34,10 @@ module.exports = {
                 if (queryEndCursor) {
                     followingVariables['after'] = queryEndCursor;
                     followingRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followingGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followingVariables))}`;
+                }
+
+                if (i !== 0) {
+                    await new Promise(done => setTimeout(done, delay()));
                 }
 
                 let taskResults = null;

@@ -1,6 +1,6 @@
+const { delay } = require('../helpers/delay');
 const { followersHeaders } = require('../constants/headers');
 const { followersRequestTask } = require('../helpers/followers');
-const { metadata } = require('./metadata');
 
 module.exports = {
     followers: (targetInstagramUserMetadata, csrfToken, sessionId) => {
@@ -41,6 +41,10 @@ module.exports = {
                     followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`
                 }
 
+                if (i !== 0) {
+                    await new Promise(done => setTimeout(done, delay()));
+                }
+                
                 let taskResults = null;
                 try {
                     taskResults = await followersRequestTask(followersRequestUrl);
