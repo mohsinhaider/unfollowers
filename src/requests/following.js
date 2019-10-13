@@ -28,6 +28,7 @@ module.exports = {
             let queryEndCursor = '';
             let isExtraRequestBatchSet = false;
 
+            // If user is not following anyone, this code will not run
             for (let i = 0; i < batchRequestCount; i++) {
                 if (queryEndCursor) {
                     followingVariables['after'] = queryEndCursor;

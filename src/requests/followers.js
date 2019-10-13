@@ -33,6 +33,7 @@ module.exports = {
             let queryEndCursor = '';
             let isExtraRequestBatchSet = false;
 
+            // If user is not followed by anyone, this code will not run
             // Instagram user ID is guarenteed to be stored in `instagramUserId` before this request is sent
             for (let i = 0; i < batchRequestCount; i++) {
                 if (queryEndCursor) {

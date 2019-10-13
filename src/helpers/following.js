@@ -20,14 +20,13 @@ module.exports = {
 
                     // Breaking Instagram followers endpoint changes
                     if (response.statusCode != 200 || error) {
-                        if (followingBatch.length == 0) {
+                        if (followingBatch.length === 0) {
                             throw new Error('Followers request yielded error response status code.');
                         }
                     }
 
                     // Expired sessionid or csrftoken; authentication issue in Cookie header
-                    // 'user has 0 followers' case is not an issue in requests/followers.js
-                    if (followingBatch.length == 0) {
+                    if (followingBatch.length === 0) {
                         throw new Error('Followers request yielded empty response collection.');
                     }
 
