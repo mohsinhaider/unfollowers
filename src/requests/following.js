@@ -1,3 +1,4 @@
+const { delay } = require('../helpers/delay');
 const { followingHeaders } = require('../constants/headers');
 const { followingRequestTask } = require('../helpers/following');
 
@@ -15,8 +16,8 @@ module.exports = {
             const followingGraphqlQueryHash = 'd04b0a864b4b54837c0d870b0e77e076';
             let followingVariables = {
                 id: targetInstagramUserMetadata.id,
-                include_reel: true,
-                fetch_mutual: true,
+                include_reel: false,
+                fetch_mutual: false,
                 first: followingBatchCount
             }
             let followingRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followingGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followingVariables))}`;
@@ -28,10 +29,15 @@ module.exports = {
             let queryEndCursor = '';
             let isExtraRequestBatchSet = false;
 
+            // If user is not following anyone, this code will not run
             for (let i = 0; i < batchRequestCount; i++) {
                 if (queryEndCursor) {
                     followingVariables['after'] = queryEndCursor;
                     followingRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followingGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followingVariables))}`;
+                }
+
+                if (i !== 0) {
+                    await new Promise(done => setTimeout(done, delay()));
                 }
 
                 let taskResults = null;

@@ -1,6 +1,6 @@
+const { delay } = require('../helpers/delay');
 const { followersHeaders } = require('../constants/headers');
 const { followersRequestTask } = require('../helpers/followers');
-const { metadata } = require('./metadata');
 
 module.exports = {
     followers: (targetInstagramUserMetadata, csrfToken, sessionId) => {
@@ -17,8 +17,8 @@ module.exports = {
             const followersGraphqlQueryHash = 'c76146de99bb02f6415203be841dd25a';
             let followersVariables = {
                 id: targetInstagramUserMetadata.id,
-                include_reel: true,
-                fetch_mutual: true,
+                include_reel: false,
+                fetch_mutual: false,
                 first: followerBatchCount
             }
             let followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`;
@@ -33,6 +33,7 @@ module.exports = {
             let queryEndCursor = '';
             let isExtraRequestBatchSet = false;
 
+            // If user is not followed by anyone, this code will not run
             // Instagram user ID is guarenteed to be stored in `instagramUserId` before this request is sent
             for (let i = 0; i < batchRequestCount; i++) {
                 if (queryEndCursor) {
@@ -40,6 +41,10 @@ module.exports = {
                     followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`
                 }
 
+                if (i !== 0) {
+                    await new Promise(done => setTimeout(done, delay()));
+                }
+                
                 let taskResults = null;
                 try {
                     taskResults = await followersRequestTask(followersRequestUrl);

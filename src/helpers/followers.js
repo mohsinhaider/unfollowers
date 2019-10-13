@@ -17,7 +17,7 @@ module.exports = {
                 try {
                     // Breaking Instagram followers endpoint changes
                     if (response.statusCode != 200 || error) {
-                        if (followersBatch.length == 0) {
+                        if (followersBatch.length === 0) {
                             throw new Error('Followers request yielded error response status code.');
                         }
                     }
@@ -27,13 +27,13 @@ module.exports = {
 
                     // Expired sessionid or csrftoken; authentication issue in Cookie header
                     // 'user has 0 followers' case is not an issue in requests/followers.js
-                    if (followersBatch.length == 0) {
+                    if (followersBatch.length === 0) {
                         throw new Error('Followers request yielded empty response collection.');
                     }
 
-                    for (let j = 0; j < followersBatch.length; j++) {
-                        followers.push(followersBatch[j]['node']['username']);
-                    }
+                    followersBatch.forEach(user => {
+                        followers.push(user['node']['username']);
+                    });
 
                     // Update end cursor, to be used in next immediate request's query string to point cursor to next batch
                     queryEndCursor = responseObject['data']['user']['edge_followed_by']['page_info']['end_cursor'];
