@@ -31,9 +31,9 @@ module.exports = {
                         throw new Error('Followers request yielded empty response collection.');
                     }
 
-                    for (let j = 0; j < followersBatch.length; j++) {
-                        followers.push(followersBatch[j]['node']['username']);
-                    }
+                    followersBatch.forEach(user => {
+                        followers.push(user['node']['username']);
+                    });
 
                     // Update end cursor, to be used in next immediate request's query string to point cursor to next batch
                     queryEndCursor = responseObject['data']['user']['edge_followed_by']['page_info']['end_cursor'];
