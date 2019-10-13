@@ -17,8 +17,8 @@ module.exports = {
             const followersGraphqlQueryHash = 'c76146de99bb02f6415203be841dd25a';
             let followersVariables = {
                 id: targetInstagramUserMetadata.id,
-                include_reel: true,
-                fetch_mutual: true,
+                include_reel: false,
+                fetch_mutual: false,
                 first: followerBatchCount
             }
             let followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`;
