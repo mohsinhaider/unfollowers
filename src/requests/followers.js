@@ -11,7 +11,7 @@ module.exports = {
             followersHeaders['X-CSRFToken'] = csrfToken;
 
             // Set the number of followers to fetch at a time (batch count)
-            const followerBatchCount = 20;
+            const followerBatchCount = 50;
 
             // Setup query string and payload for Instagram followers request
             const followersGraphqlQueryHash = 'c76146de99bb02f6415203be841dd25a';
@@ -42,7 +42,7 @@ module.exports = {
                 }
 
                 if (i !== 0) {
-                    await new Promise(done => setTimeout(done, delay()));
+                    await new Promise(done => setTimeout(done, delay(totalFollowerCount)));
                 }
                 
                 let taskResults = null;
