@@ -10,7 +10,7 @@ module.exports = {
             followingHeaders['Cookie'] = sessionIdCookieKeyValuePair;
 
             // Set the number of following to fetch at a time (batch count)
-            const followingBatchCount = 20;
+            const followingBatchCount = 50;
 
             // Setup query string and payload for Instagram following request
             const followingGraphqlQueryHash = 'd04b0a864b4b54837c0d870b0e77e076';
@@ -37,7 +37,7 @@ module.exports = {
                 }
 
                 if (i !== 0) {
-                    await new Promise(done => setTimeout(done, delay()));
+                    await new Promise(done => setTimeout(done, delay(totalFollowingCount)));
                 }
 
                 let taskResults = null;
