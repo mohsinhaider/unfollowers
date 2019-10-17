@@ -1,22 +1,25 @@
-<div class="container">
+<div class="container" id="shitboi" style="padding-top: 15px">
     <div class="row">
         <div class="col s12">
             <div class="col s10 offset-s1">
-                <h4 style="font-family: 'Shadows Into Light Two', cursive; text-align: center">Who's not following you back?</h4>
-                <h4 style="font-family: 'Shadows Into Light Two', cursive; text-align: center">We know.</h4>
+                <p style="font-family: 'Source Sans Pro Black', sans-serif; text-align: center; font-size: 45px; margin-bottom: 25px; line-height: 65px; color: #f7eeed"><b>You're being unfollowed</b></p>
+                <p style="font-family: 'Source Sans Pro Black', sans-serif; text-align: center; font-size: 22px; margin-bottom: 65px; margin-top: 16px; color: #f7eeed"><b>Discover who you're losing, take action, and sleep in peace.</b></p>
             </div>
         </div>
     </div>
-    <br>
+</div>
+<br>
+<div class="container">
     <div class="row">
-        <form action="/api/nonfollower" class="col s10">
-            <div class="input-field col s9">
-                {{!-- <i class="material-icons prefix" style="color: black">person_outline</i> --}}
-                <input type="text" placeholder="@therock" name="username" id="username-input">
+        <form action="/api/nonfollower" class="col s12">
+            <div class="input-field" style="margin-bottom: 0px">
+                <i class="material-icons prefix" style="color: black">person_outline</i>
+                <input type="text" placeholder="@therock" name="username" id="username-input" style="margin-bottom: 0px">
                 <label for="username-input">Instagram Handle</label>
             </div>
-            <div class="input-field col s1">
-                <button class="btn waves-effect waves-light grey darken-4" style="text-transform: none" type="submit" name="action">Submit
+            <div class="input-field" style="float: right">
+                <button class="btn waves-effect waves-light grey darken-4" style="text-transform: none" type="submit" name="action">
+                    Submit
                 </button>
             </div>
         </form>
