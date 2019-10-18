@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon -r dotenv/config src/index.js",
+    "dev": "nodemon --ignore ./public/js -r dotenv/config src/index.js",
     "test": "jest --setupFiles dotenv/config --runInBand"
   },
   "jest": {
