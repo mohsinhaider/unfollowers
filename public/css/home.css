@@ -7,10 +7,11 @@
     color: black
 }
 
-#shitboi {
-    background: url('/img/home-banner.jpg') 70% 0 no-repeat;
+#home-hero {
+    background: url('/img/home-hero.jpg') 70% 0 no-repeat;
     background-size: cover;
     height: 100%;
     width: 100%;
     max-width: 100%;
+    padding-top: 15px;
 }
