@@ -1,12 +1,3 @@
-#username-input:focus {
-    border-bottom: 1px solid black;
-    box-shadow: 0 1px 0 0 black;
-}
-
-#username-input:focus + label {
-    color: black
-}
-
 #home-hero {
     background: url('/img/home-hero.jpg') 70% 0 no-repeat;
     background-size: cover;
@@ -32,4 +23,33 @@
     font-size: 22px;
     margin-bottom: 65px;
     margin-top: 16px;
+}
+
+#submit-button {
+    text-transform: none;
+}
+
+#submit-button-parent {
+    float: right;
+}
+
+#username-input {
+    margin-bottom: 0px;
+}
+
+#username-input:focus {
+    border-bottom: 1px solid black;
+    box-shadow: 0 1px 0 0 black;
+}
+
+#username-input:focus + label {
+    color: black
+}
+
+#username-input-icon {
+    color: black;
+}
+
+#username-input-parent {
+    margin-bottom: 0px;
 }
