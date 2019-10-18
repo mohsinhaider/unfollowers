@@ -8,9 +8,9 @@
 }
 
 #shitboi {
-    max-width: 100%;
-    width:100%;
-    height:100%;
-    background: url(https://ucf.org.au/wp-content/uploads/ucf-gradient-banner.jpg) 70% 0 no-repeat;
+    background: url('/img/home-banner.jpg') 70% 0 no-repeat;
     background-size: cover;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
 }
