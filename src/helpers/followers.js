@@ -32,7 +32,11 @@ module.exports = {
                     }
 
                     followersBatch.forEach(user => {
-                        followers.push(user['node']['username']);
+                        const followerUserPayload = {
+                            username: user['node']['username'],
+                            profilePicUrl: user['node']['profile_pic_url']
+                        }
+                        followers.push(followerUserPayload);
                     });
 
                     // Update end cursor, to be used in next immediate request's query string to point cursor to next batch
