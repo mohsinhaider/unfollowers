@@ -15,18 +15,19 @@ submitButton.addEventListener('click', async () => {
             removeNonfollowersTable();
             isNonfollowerTableOn = false;
         }
+        if (isErrorFlashOn) {
+            removeErrorFlash();
+            isErrorFlashOn = false;
+        }
 
         if (isValidHandleFormat(handle)) {
-            if (isErrorFlashOn) {
-                removeErrorFlash();
-                isErrorFlashOn = false;
-            }
-
             let nonfollowers = null;
             try {
                 nonfollowers = await requestNonFollowers(handle);
             }
             catch (error) {
+                renderErrorFlash();
+                isErrorFlashOn = true;
                 return;
             }
             renderNonfollowersTable(nonfollowers);
@@ -105,21 +106,13 @@ let removeErrorFlash = () => {
 }
 
 let requestNonFollowers = async (handle) => {
-    let response = null;
-    try {
-        response = await axios.post('/api/nonfollower', { username: handle });
-    }
-    catch (error) {
-        renderErrorFlash();
-        isErrorFlashOn = true;
+    const response = await axios.post('/api/nonfollower', { username: handle });
+
+    // POST /api/nonfollower will return 200 with error property if handle does not exist
+    if ('error' in response.data) {
         throw new Error();
     }
 
-    if ('error' in response.data) {
-        renderErrorFlash();
-        isErrorFlashOn = true;
-        throw new Error();
-    }
     return response.data;
 }
 
