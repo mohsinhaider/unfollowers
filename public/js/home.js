@@ -16,7 +16,7 @@ submitButton.addEventListener('click', async () => {
                 isErrorFlashOn = false;
             }
             const nonfollowers = await requestNonFollowers(handle);
-            renderNonfollowers(nonfollowers);
+            renderNonfollowersTable(nonfollowers);
         } 
         else {
             if (!isErrorFlashOn) {
@@ -95,7 +95,7 @@ let requestNonFollowers = async (handle) => {
     return response.data;
 }
 
-let renderNonfollowers = (nonfollowers) => {
+let renderNonfollowersTable = (nonfollowers) => {
     let nonfollowerRow = document.createElement('div');
     nonfollowerRow.className = 'row';
 
