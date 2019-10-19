@@ -13,6 +13,7 @@ submitButton.addEventListener('click', () => {
         if (isValidHandleFormat(handle)) {
             if (isErrorFlashOn) {
                 removeErrorFlash();
+                isErrorFlashOn = false;
             }
         } 
         else {
