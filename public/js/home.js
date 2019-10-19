@@ -16,10 +16,11 @@ submitButton.addEventListener('click', async () => {
                 isErrorFlashOn = false;
             }
             const nonfollowers = await requestNonFollowers(handle);
+            renderNonfollowers(nonfollowers);
         } 
         else {
             if (!isErrorFlashOn) {
-                insertErrorFlash();
+                renderErrorFlash();
                 isErrorFlashOn = true;
             }
         }
@@ -39,7 +40,7 @@ let isValidHandleFormat = (handle) => {
     return true;
 }
 
-let insertErrorFlash = () => {
+let renderErrorFlash = () => {
     let errorRow = document.createElement('div');
     errorRow.className = 'row';
     errorRow.id = 'error-row';
@@ -94,6 +95,33 @@ let requestNonFollowers = async (handle) => {
     return response.data;
 }
 
-// let insertNonfollowers = (nonfollowers) => {
-//     let nonFollowersTable = document.createElement('table');
-// }
+let renderNonfollowers = (nonfollowers) => {
+    let nonfollowerRow = document.createElement('div');
+    nonfollowerRow.className = 'row';
+
+    let nonfollowerColumns = document.createElement('div');
+    nonfollowerColumns.className = 'col s12';
+
+    let nonfollowerTable = document.createElement('table');
+
+    let rowCount = 0;
+
+    nonfollowers.forEach(nonfollower => {
+        let row = nonfollowerTable.insertRow(rowCount);
+        let cell1 = row.insertCell(0);
+        let image = document.createElement('img');
+        image.src = nonfollower.profilePicUrl;
+        image.style = 'border-radius: 50%;'
+        image.style.width = '50px';
+        image.style.height = '50px';
+        cell1.style.width = '50px';
+        cell1.innerHTML = image.outerHTML;
+        let cell2 = row.insertCell(1);
+        cell2.innerHTML = nonfollower.username;
+        rowCount++;
+    });
+
+    nonfollowerColumns.appendChild(nonfollowerTable);
+    nonfollowerRow.appendChild(nonfollowerColumns);
+    nonfollowerRow.appendAfter(inputRow);
+}
