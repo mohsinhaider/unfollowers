@@ -11,14 +11,8 @@ submitButton.addEventListener('click', async () => {
     const handle = (usernameInput.value).trim();
 
     if (handle) {
-        if (isNonfollowerTableOn) {
-            removeNonfollowersTable();
-            isNonfollowerTableOn = false;
-        }
-        if (isErrorFlashOn) {
-            removeErrorFlash();
-            isErrorFlashOn = false;
-        }
+        State.update(removeNonfollowersTable, 'isNonfollowerTableOn', false);
+        State.update(removeErrorFlash, 'isErrorFlashOn', false);
 
         if (isValidHandleFormat(handle)) {
             let nonfollowers = null;
@@ -26,17 +20,14 @@ submitButton.addEventListener('click', async () => {
                 nonfollowers = await requestNonFollowers(handle);
             }
             catch (error) {
-                renderErrorFlash();
-                isErrorFlashOn = true;
+                State.update(renderErrorFlash, 'isErrorFlashOn', true);
                 return;
             }
-            renderNonfollowersTable(nonfollowers);
-            isNonfollowerTableOn = true;
+            State.update(() => renderNonfollowersTable(nonfollowers), 'isNonfollowerTableOn', true);
         } 
         else {
             if (!isErrorFlashOn) {
-                renderErrorFlash();
-                isErrorFlashOn = true;
+                State.update(renderErrorFlash, 'isErrorFlashOn', true)
             }
         }
     }
