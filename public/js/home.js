@@ -105,19 +105,24 @@ let renderNonfollowers = (nonfollowers) => {
     let nonfollowerTable = document.createElement('table');
 
     let rowCount = 0;
-
     nonfollowers.forEach(nonfollower => {
-        let row = nonfollowerTable.insertRow(rowCount);
-        let cell1 = row.insertCell(0);
-        let image = document.createElement('img');
-        image.src = nonfollower.profilePicUrl;
-        image.style = 'border-radius: 50%;'
-        image.style.width = '50px';
-        image.style.height = '50px';
-        cell1.style.width = '50px';
-        cell1.innerHTML = image.outerHTML;
-        let cell2 = row.insertCell(1);
-        cell2.innerHTML = nonfollower.username;
+        let nonfollowerMetadataRow = nonfollowerTable.insertRow(rowCount);
+
+        let profilePicCell = nonfollowerMetadataRow.insertCell(0);
+        profilePicCell.style.width = '50px';
+
+        let profilePic = document.createElement('img');
+        profilePic.src = nonfollower.profilePicUrl;
+        profilePic.style = 'border-radius: 50%;'
+        profilePic.style.width = '50px';
+        profilePic.style.height = '50px';
+
+        profilePicCell.style.width = '50px';
+        profilePicCell.innerHTML = profilePic.outerHTML;
+
+        let handleRow = nonfollowerMetadataRow.insertCell(1);
+        handleRow.innerHTML = nonfollower.username;
+
         rowCount++;
     });
 
