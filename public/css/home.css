@@ -25,6 +25,13 @@
     margin-top: 16px;
 }
 
+.round-corner {
+    -webkit-border-radius: 15px 15px 15px 15px;
+    -moz-border-radius: 15px 15px 15px 15px;
+    -o-border-radius: 15px 15px 15px 15px;
+    border-radius: 15px 15px 15px 15px;
+}
+
 #submit-button {
     text-transform: none;
 }
