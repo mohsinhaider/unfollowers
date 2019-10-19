@@ -4,12 +4,18 @@ const usernameInput = document.querySelector('#username-input');
 
 const isMobileClient = Helper.isMobileClient();
 let isErrorFlashOn = false;
+let isNonfollowerTableOn = false;
 
 submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
     const handle = (usernameInput.value).trim();
 
     if (handle) {
+        if (isNonfollowerTableOn) {
+            removeNonfollowersTable();
+            isNonfollowerTableOn = false;
+        }
+
         if (isValidHandleFormat(handle)) {
             if (isErrorFlashOn) {
                 removeErrorFlash();
@@ -17,6 +23,7 @@ submitButton.addEventListener('click', async () => {
             }
             const nonfollowers = await requestNonFollowers(handle);
             renderNonfollowersTable(nonfollowers);
+            isNonfollowerTableOn = true;
         } 
         else {
             if (!isErrorFlashOn) {
@@ -98,6 +105,7 @@ let requestNonFollowers = async (handle) => {
 let renderNonfollowersTable = (nonfollowers) => {
     let nonfollowerRow = document.createElement('div');
     nonfollowerRow.className = 'row';
+    nonfollowerRow.id = 'nonfollower-row';
 
     let nonfollowerColumns = document.createElement('div');
     nonfollowerColumns.className = 'col s12';
@@ -129,4 +137,9 @@ let renderNonfollowersTable = (nonfollowers) => {
     nonfollowerColumns.appendChild(nonfollowerTable);
     nonfollowerRow.appendChild(nonfollowerColumns);
     nonfollowerRow.appendAfter(inputRow);
+}
+
+let removeNonfollowersTable = () => {
+    let nonfollowersTable = document.querySelector('#nonfollower-row');
+    nonfollowersTable.parentNode.removeChild(nonfollowersTable);
 }
