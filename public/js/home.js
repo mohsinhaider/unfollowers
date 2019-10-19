@@ -5,7 +5,7 @@ const usernameInput = document.querySelector('#username-input');
 const isMobileClient = Helper.isMobileClient();
 let isErrorFlashOn = false;
 
-submitButton.addEventListener('click', () => {
+submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
     const handle = (usernameInput.value).trim();
 
@@ -15,6 +15,7 @@ submitButton.addEventListener('click', () => {
                 removeErrorFlash();
                 isErrorFlashOn = false;
             }
+            const nonfollowers = await requestNonFollowers(handle);
         } 
         else {
             if (!isErrorFlashOn) {
@@ -88,14 +89,11 @@ let removeErrorFlash = () => {
     errorFlash.parentNode.removeChild(errorFlash);
 }
 
-// axios({
-//     method: 'post',
-//     url: '/api/nonfollower',
-//     data: {
-//         username: 'mohsinwho'
-//     }
-// }).then((response) => {
-//     console.log(response.data);
-// }).catch((error) => {
-//     console.log(error);
-// });
+let requestNonFollowers = async (handle) => {
+    const response = await axios.post('/api/nonfollower', { username: handle });
+    return response.data;
+}
+
+// let insertNonfollowers = (nonfollowers) => {
+//     let nonFollowersTable = document.createElement('table');
+// }
