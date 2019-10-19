@@ -3,18 +3,20 @@ const submitButton = document.querySelector('#submit-button');
 const usernameInput = document.querySelector('#username-input');
 
 const isMobileClient = Helper.isMobileClient();
+let isErrorFlashOn = false;
 
 submitButton.addEventListener('click', () => {
     // Remove leading and trailing whitespace
     const handle = (usernameInput.value).trim();
-    var isErrorFlashOn = false;
 
     if (handle) {
         if (isValidHandleFormat(handle)) {
             if (isErrorFlashOn) {
-
+                removeErrorFlash();
+                isErrorFlashOn = false;
             }
-        } else {
+        } 
+        else {
             if (!isErrorFlashOn) {
                 insertErrorFlash();
                 isErrorFlashOn = true;
@@ -22,7 +24,6 @@ submitButton.addEventListener('click', () => {
         }
     }
 });
-
 
 let isValidHandleFormat = (handle) => {
     const expression = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/);
@@ -80,6 +81,11 @@ let insertErrorFlash = () => {
 
     errorRow.appendAfter(inputRow);
     Helper.fadeIn(errorRow);
+}
+
+let removeErrorFlash = () => {
+    let errorFlash = document.querySelector('#error-row');
+    errorFlash.parentNode.removeChild(errorFlash);
 }
 
 // axios({
