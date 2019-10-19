@@ -21,7 +21,14 @@ submitButton.addEventListener('click', async () => {
                 removeErrorFlash();
                 isErrorFlashOn = false;
             }
-            const nonfollowers = await requestNonFollowers(handle);
+
+            let nonfollowers = null;
+            try {
+                nonfollowers = await requestNonFollowers(handle);
+            }
+            catch (error) {
+                return;
+            }
             renderNonfollowersTable(nonfollowers);
             isNonfollowerTableOn = true;
         } 
@@ -98,7 +105,21 @@ let removeErrorFlash = () => {
 }
 
 let requestNonFollowers = async (handle) => {
-    const response = await axios.post('/api/nonfollower', { username: handle });
+    let response = null;
+    try {
+        response = await axios.post('/api/nonfollower', { username: handle });
+    }
+    catch (error) {
+        renderErrorFlash();
+        isErrorFlashOn = true;
+        throw new Error();
+    }
+
+    if ('error' in response.data) {
+        renderErrorFlash();
+        isErrorFlashOn = true;
+        throw new Error();
+    }
     return response.data;
 }
 

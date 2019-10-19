@@ -2,7 +2,7 @@ const express = require('express');
 const { followers } = require('../requests/followers');
 const { following } = require('../requests/following');
 const { metadata } = require('../requests/metadata');
-const { FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC } 
+const { FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC, USERID_REQUEST_ERROR_404 } 
     = require('../constants/responses');
 
 const router = express.Router();
@@ -46,7 +46,12 @@ router.post('/', async (req, res) => {
         });
     }
     catch (error) {
-        res.status(500).send(error);
+        if (error === USERID_REQUEST_ERROR_404) {
+            res.status(200).send({ error: USERID_REQUEST_ERROR_404 });
+        }
+        else {
+            res.status(500).send(error);
+        }
     }
 });
 
