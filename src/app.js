@@ -6,6 +6,7 @@ const path = require('path');
 
 const ApiRouter = require('./routes/api.routes');
 const IndexRouter = require('./routes/index.routes');
+const MetadataRouter = require('./routes/metadata.routes');
 const NonfollowerRouter = require('./routes/nonfollower.routes');
 
 const app = express();
@@ -39,6 +40,7 @@ app.disable('x-powered-by');
 // Set up routers with Express middleware
 app.use('/', IndexRouter);
 app.use(apiRoutePrefix + '/', ApiRouter);
+app.use(apiRoutePrefix + '/metadata', MetadataRouter);
 app.use(apiRoutePrefix + '/nonfollower', NonfollowerRouter);
 
 module.exports = app;
