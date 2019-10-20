@@ -1,5 +1,5 @@
 const request = require('request');
-const { USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC, USERID_REQUEST_ERROR_404 } 
+const { USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC, USERID_REQUEST_ERROR_404, USERID_REQUEST_ERROR_PRIVATE_USER } 
     = require('../constants/responses');
 
 module.exports = {
@@ -22,11 +22,15 @@ module.exports = {
                     return reject(USERID_REQUEST_ERROR);
                 }
 
-                let instagramUserId;
+                let instagramUserId, isPrivate;
                 const responseObject = JSON.parse(response.body);
 
                 try {
                     instagramUserId = responseObject.graphql.user.id
+                    isPrivate = responseObject.graphql.user.is_private;
+                    if (isPrivate) {
+                        return reject(USERID_REQUEST_ERROR_PRIVATE_USER);
+                    }
                 }
                 catch (error) {
                     // Object structure is not as expected; may have changed
