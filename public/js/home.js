@@ -3,8 +3,6 @@ const submitButton = document.querySelector('#submit-button');
 const usernameInput = document.querySelector('#username-input');
 
 const isMobileClient = Helper.isMobileClient();
-let isErrorFlashOn = false;
-let isNonfollowerTableOn = false;
 
 submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
