@@ -1,7 +1,7 @@
 class Helper {
     static fadeIn(element) {
         let currentOpacity = 0;
-        let opacityIncrementValue = 0.1;
+        let opacityIncrementValue = 0.3;
 
         let adjustOpacity = () => {
             if (currentOpacity >= 1) {
