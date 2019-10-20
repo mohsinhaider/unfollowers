@@ -66,9 +66,6 @@ let renderErrorFlash = (errorMessage = '') => {
     let errorDiv = document.createElement('div');
     errorDiv.className = 'round-corner'
     errorDiv.style.backgroundColor = '#f5cece';
-    errorDiv.style.borderColor = 'red';
-    errorDiv.style.borderStyle = 'solid';
-    errorDiv.style.borderWidth = '1px';
     errorDiv.style.paddingTop = '20px';
     errorDiv.style.paddingBottom = '20px';
     errorDiv.style.paddingLeft = '15px';
