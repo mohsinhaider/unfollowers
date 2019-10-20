@@ -2,17 +2,13 @@ const inputRow = document.querySelector('#input-row');
 const submitButton = document.querySelector('#submit-button');
 const usernameInput = document.querySelector('#username-input');
 
-const isMobileClient = Helper.isMobileClient();
-let isErrorFlashOn = false;
-let isNonfollowerTableOn = false;
-
 submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
     const handle = (usernameInput.value).trim();
 
     if (handle) {
-        State.update(removeNonfollowersTable, 'isNonfollowerTableOn', false);
-        State.update(removeErrorFlash, 'isErrorFlashOn', false);
+        State.update('isNonfollowerTableOn', false, removeNonfollowersTable);
+        State.update('isErrorFlashOn', false, removeErrorFlash);
 
         if (isValidHandleFormat(handle)) {
             let nonfollowers = null;
@@ -20,13 +16,13 @@ submitButton.addEventListener('click', async () => {
                 nonfollowers = await requestNonFollowers(handle);
             }
             catch (error) {
-                State.update(renderErrorFlash, 'isErrorFlashOn', true);
+                State.update('isErrorFlashOn', true, renderErrorFlash);
                 return;
             }
-            State.update(() => renderNonfollowersTable(nonfollowers), 'isNonfollowerTableOn', true);
+            State.update('isNonfollowerTableOn', true, () => renderNonfollowersTable(nonfollowers));
         } 
         else {
-            State.update(renderErrorFlash, 'isErrorFlashOn', true)
+            State.update('isErrorFlashOn', true, renderErrorFlash);
         }
     }
 });
@@ -70,7 +66,7 @@ let renderErrorFlash = () => {
     errorFaIcon.style.color = 'red';
 
     let errorText = document.createElement('b');
-    if (isMobileClient) { 
+    if (State.get('isMobileClient')) { 
         errorText.innerText = 'Oops! Is your handle typed right?';
     } 
     else { 
