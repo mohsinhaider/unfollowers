@@ -31,8 +31,12 @@ module.exports = {
                     }
 
                     followingBatch.forEach(user => {
-                        following.push(user['node']['username']);
-                    })
+                        const followingUserPayload = {
+                            username: user['node']['username'],
+                            profilePicUrl: user['node']['profile_pic_url']
+                        }
+                        following.push(followingUserPayload);
+                    });
 
                     // Update end cursor, to be used in next immediate request's query string to point cursor to next batch
                     queryEndCursor = responseObject['data']['user']['edge_follow']['page_info']['end_cursor'];

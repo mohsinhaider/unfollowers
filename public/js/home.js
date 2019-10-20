@@ -4,23 +4,29 @@ const usernameInput = document.querySelector('#username-input');
 
 const isMobileClient = Helper.isMobileClient();
 let isErrorFlashOn = false;
+let isNonfollowerTableOn = false;
 
-submitButton.addEventListener('click', () => {
+submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
     const handle = (usernameInput.value).trim();
 
     if (handle) {
+        State.update(removeNonfollowersTable, 'isNonfollowerTableOn', false);
+        State.update(removeErrorFlash, 'isErrorFlashOn', false);
+
         if (isValidHandleFormat(handle)) {
-            if (isErrorFlashOn) {
-                removeErrorFlash();
-                isErrorFlashOn = false;
+            let nonfollowers = null;
+            try {
+                nonfollowers = await requestNonFollowers(handle);
             }
+            catch (error) {
+                State.update(renderErrorFlash, 'isErrorFlashOn', true);
+                return;
+            }
+            State.update(() => renderNonfollowersTable(nonfollowers), 'isNonfollowerTableOn', true);
         } 
         else {
-            if (!isErrorFlashOn) {
-                insertErrorFlash();
-                isErrorFlashOn = true;
-            }
+            State.update(renderErrorFlash, 'isErrorFlashOn', true)
         }
     }
 });
@@ -38,7 +44,7 @@ let isValidHandleFormat = (handle) => {
     return true;
 }
 
-let insertErrorFlash = () => {
+let renderErrorFlash = () => {
     let errorRow = document.createElement('div');
     errorRow.className = 'row';
     errorRow.id = 'error-row';
@@ -88,14 +94,55 @@ let removeErrorFlash = () => {
     errorFlash.parentNode.removeChild(errorFlash);
 }
 
-// axios({
-//     method: 'post',
-//     url: '/api/nonfollower',
-//     data: {
-//         username: 'mohsinwho'
-//     }
-// }).then((response) => {
-//     console.log(response.data);
-// }).catch((error) => {
-//     console.log(error);
-// });
+let requestNonFollowers = async (handle) => {
+    const response = await axios.post('/api/nonfollower', { username: handle });
+
+    // POST /api/nonfollower will return 200 with error property if handle does not exist
+    if ('error' in response.data) {
+        throw new Error();
+    }
+
+    return response.data;
+}
+
+let renderNonfollowersTable = (nonfollowers) => {
+    let nonfollowerRow = document.createElement('div');
+    nonfollowerRow.className = 'row';
+    nonfollowerRow.id = 'nonfollower-row';
+
+    let nonfollowerColumns = document.createElement('div');
+    nonfollowerColumns.className = 'col s12';
+
+    let nonfollowerTable = document.createElement('table');
+
+    let rowCount = 0;
+    nonfollowers.forEach(nonfollower => {
+        let nonfollowerMetadataRow = nonfollowerTable.insertRow(rowCount);
+
+        let profilePicCell = nonfollowerMetadataRow.insertCell(0);
+        profilePicCell.style.width = '50px';
+
+        let profilePic = document.createElement('img');
+        profilePic.src = nonfollower.profilePicUrl;
+        profilePic.style = 'border-radius: 50%;'
+        profilePic.style.width = '50px';
+        profilePic.style.height = '50px';
+
+        profilePicCell.style.width = '50px';
+        profilePicCell.innerHTML = profilePic.outerHTML;
+
+        let handleRow = nonfollowerMetadataRow.insertCell(1);
+        handleRow.innerHTML = nonfollower.username;
+
+        rowCount++;
+    });
+
+    nonfollowerColumns.appendChild(nonfollowerTable);
+    nonfollowerRow.appendChild(nonfollowerColumns);
+    nonfollowerRow.appendAfter(inputRow);
+}
+
+let removeNonfollowersTable = () => {
+    let nonfollowersTable = document.querySelector('#nonfollower-row');
+    nonfollowersTable.parentNode.removeChild(nonfollowersTable);
+}

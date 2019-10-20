@@ -33,6 +33,9 @@ app.set('view engine', 'handlebars');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Disable X-Powered-By
+app.disable('x-powered-by');
+
 // Set up routers with Express middleware
 app.use('/', IndexRouter);
 app.use(apiRoutePrefix + '/', ApiRouter);

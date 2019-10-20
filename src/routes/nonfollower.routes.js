@@ -2,7 +2,7 @@ const express = require('express');
 const { followers } = require('../requests/followers');
 const { following } = require('../requests/following');
 const { metadata } = require('../requests/metadata');
-const { FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC } 
+const { FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC, USERID_REQUEST_ERROR_404 } 
     = require('../constants/responses');
 
 const router = express.Router();
@@ -26,10 +26,19 @@ router.post('/', async (req, res) => {
             followerUsernames = result[0];
             followingUsernames = result[1];
 
-            // For each user following, check if they are a follower, if not, they are a 'nonfollower'
-            followingUsernames.forEach(user => {
-                if (!followerUsernames.includes(user)) {
-                    nonfollowerUsernames.push(user);
+            // For each following user, check if they are a follower, if not, they are a 'nonfollower'
+            followingUsernames.forEach(followingUser => {
+                let foundUser = false;
+                // followingUser & followerUsername[i] schema: 
+                //      { username: 'this', profilePicUrl: 'that' }
+                for (let i = 0; i < followerUsernames.length; i++) {
+                    if (followerUsernames[i].username === followingUser.username) {
+                        foundUser = true;
+                        break;
+                    }
+                }
+                if (!foundUser) {
+                    nonfollowerUsernames.push(followingUser);
                 }
             });
 
@@ -37,7 +46,12 @@ router.post('/', async (req, res) => {
         });
     }
     catch (error) {
-        res.status(500).send(error);
+        if (error === USERID_REQUEST_ERROR_404) {
+            res.status(200).send({ error: USERID_REQUEST_ERROR_404 });
+        }
+        else {
+            res.status(500).send(error);
+        }
     }
 });
 
