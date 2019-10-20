@@ -26,9 +26,7 @@ submitButton.addEventListener('click', async () => {
             State.update(() => renderNonfollowersTable(nonfollowers), 'isNonfollowerTableOn', true);
         } 
         else {
-            if (!isErrorFlashOn) {
-                State.update(renderErrorFlash, 'isErrorFlashOn', true)
-            }
+            State.update(renderErrorFlash, 'isErrorFlashOn', true)
         }
     }
 });
