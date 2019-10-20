@@ -1,5 +1,9 @@
 class State {
-    static update(key, value, executor) {
+    static get(key) {
+        return State.events[key];
+    } 
+
+    static update(key, value, executor=(() => { return; })) {
         try {
             if (this.shouldExecute(key, value)) {
                 executor();
@@ -7,13 +11,13 @@ class State {
             }
         }   
         catch (error) {
-            console.log('Executor could not run; state was not updated.');
+            // Premature remove operations will throw here
         }
     }
 
     static shouldExecute(key, value) {
         let keyExists = (key in State.events);
-        if ((!keyExists && !value) || (keyExists && State.events[key] === value)) {
+        if ((keyExists && State.events[key] === value)) {
             return false;
         }
         return true;
