@@ -2,8 +2,6 @@ const inputRow = document.querySelector('#input-row');
 const submitButton = document.querySelector('#submit-button');
 const usernameInput = document.querySelector('#username-input');
 
-const isMobileClient = Helper.isMobileClient();
-
 submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
     const handle = (usernameInput.value).trim();
@@ -68,7 +66,7 @@ let renderErrorFlash = () => {
     errorFaIcon.style.color = 'red';
 
     let errorText = document.createElement('b');
-    if (isMobileClient) { 
+    if (State.get('isMobileClient')) { 
         errorText.innerText = 'Oops! Is your handle typed right?';
     } 
     else { 
