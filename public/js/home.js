@@ -23,7 +23,13 @@ submitButton.addEventListener('click', async () => {
                 nonfollowers = await requestNonFollowers(handle);
             }
             catch (error) {
-                State.update('isErrorFlashOn', true, renderErrorFlash);
+                let fn = null;
+                if (error.message === USERID_REQUEST_ERROR_PRIVATE_USER) {
+                    fn = () => renderErrorFlash('Oops! Your profile must be public to use Straws.');
+                } else {
+                    fn = renderErrorFlash;
+                }
+                State.update('isErrorFlashOn', true, fn);
                 return;
             }
             State.update('isNonfollowerTableOn', true, () => renderNonfollowersTable(nonfollowers));
@@ -47,7 +53,7 @@ let isValidHandleFormat = (handle) => {
     return true;
 }
 
-let renderErrorFlash = () => {
+let renderErrorFlash = (errorMessage = '') => {
     let errorRow = document.createElement('div');
     errorRow.className = 'row';
     errorRow.id = 'error-row';
@@ -73,8 +79,11 @@ let renderErrorFlash = () => {
     errorFaIcon.style.color = 'red';
 
     let errorText = document.createElement('b');
-    if (State.get('isMobileClient')) { 
-        errorText.innerText = 'Oops! Is your handle typed right?';
+    if (errorMessage) {
+        errorText.innerText = errorMessage;
+    }
+    else if (State.get('isMobileClient')) { 
+        errorText.innerText = 'Oops! Is your handle spelled right?';
     } 
     else { 
         errorText.innerText = 'Oops! Is your handle spelled correctly?';
@@ -102,7 +111,7 @@ let requestNonFollowers = async (handle) => {
 
     // POST /api/nonfollower will return 200 with error property if handle does not exist
     if ('error' in response.data) {
-        throw new Error();
+        throw new Error(response.data.error);
     }
 
     return response.data;

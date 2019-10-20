@@ -1,0 +1,1 @@
+const USERID_REQUEST_ERROR_PRIVATE_USER = 'Instagram user is private.';
