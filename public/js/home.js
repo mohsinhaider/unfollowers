@@ -11,18 +11,25 @@ usernameInput.addEventListener('keyup', (event) => {
 
 submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
-    const handle = (usernameInput.value).trim();
+    let handle = (usernameInput.value).trim();
 
     if (handle) {
+        // Clear components when new interface request happens
         State.update('isNonfollowerTableOn', false, removeNonfollowersTable);
         State.update('isErrorFlashOn', false, removeErrorFlash);
 
         if (isValidHandleFormat(handle)) {
+            // Check if user typed '@'
+            handle = Helper.trimAtSymbol(handle);
+
             let nonfollowers = null;
             try {
                 nonfollowers = await requestNonFollowers(handle);
             }
             catch (error) {
+                // Reached by server-side Promise rejects for:
+                // * Non-existent user
+                // * Private user
                 let fn = null;
                 if (error.message === USERID_REQUEST_ERROR_PRIVATE_USER) {
                     fn = () => renderErrorFlash('Oops! Your profile must be public to use Straws.');
