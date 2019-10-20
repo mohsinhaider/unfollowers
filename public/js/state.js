@@ -1,5 +1,5 @@
 class State {
-    static update(executor, key, value) {
+    static update(key, value, executor) {
         try {
             if (this.shouldExecute(key, value)) {
                 executor();
