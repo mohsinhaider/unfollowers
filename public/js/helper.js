@@ -4,7 +4,7 @@ class Helper {
         let opacityIncrementValue = 0.1;
 
         let adjustOpacity = () => {
-            if (currentOpacity === 1) {
+            if (currentOpacity >= 1) {
                 clearInterval(timer);
             }
             currentOpacity += opacityIncrementValue;
