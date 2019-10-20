@@ -2,21 +2,41 @@ const inputRow = document.querySelector('#input-row');
 const submitButton = document.querySelector('#submit-button');
 const usernameInput = document.querySelector('#username-input');
 
+usernameInput.addEventListener('keyup', (event) => {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        submitButton.click();
+    }
+});
+
 submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
-    const handle = (usernameInput.value).trim();
+    let handle = (usernameInput.value).trim();
 
     if (handle) {
+        // Clear components when new interface request happens
         State.update('isNonfollowerTableOn', false, removeNonfollowersTable);
         State.update('isErrorFlashOn', false, removeErrorFlash);
 
         if (isValidHandleFormat(handle)) {
+            // Check if user typed '@'
+            handle = Helper.trimAtSymbol(handle);
+
             let nonfollowers = null;
             try {
                 nonfollowers = await requestNonFollowers(handle);
             }
             catch (error) {
-                State.update('isErrorFlashOn', true, renderErrorFlash);
+                // Reached by server-side Promise rejects for:
+                // * Non-existent user
+                // * Private user
+                let fn = null;
+                if (error.message === USERID_REQUEST_ERROR_PRIVATE_USER) {
+                    fn = () => renderErrorFlash('Oops! Your profile must be public to use Straws.');
+                } else {
+                    fn = renderErrorFlash;
+                }
+                State.update('isErrorFlashOn', true, fn);
                 return;
             }
             State.update('isNonfollowerTableOn', true, () => renderNonfollowersTable(nonfollowers));
@@ -40,7 +60,7 @@ let isValidHandleFormat = (handle) => {
     return true;
 }
 
-let renderErrorFlash = () => {
+let renderErrorFlash = (errorMessage = '') => {
     let errorRow = document.createElement('div');
     errorRow.className = 'row';
     errorRow.id = 'error-row';
@@ -53,9 +73,6 @@ let renderErrorFlash = () => {
     let errorDiv = document.createElement('div');
     errorDiv.className = 'round-corner'
     errorDiv.style.backgroundColor = '#f5cece';
-    errorDiv.style.borderColor = 'red';
-    errorDiv.style.borderStyle = 'solid';
-    errorDiv.style.borderWidth = '1px';
     errorDiv.style.paddingTop = '20px';
     errorDiv.style.paddingBottom = '20px';
     errorDiv.style.paddingLeft = '15px';
@@ -66,8 +83,11 @@ let renderErrorFlash = () => {
     errorFaIcon.style.color = 'red';
 
     let errorText = document.createElement('b');
-    if (State.get('isMobileClient')) { 
-        errorText.innerText = 'Oops! Is your handle typed right?';
+    if (errorMessage) {
+        errorText.innerText = errorMessage;
+    }
+    else if (State.get('isMobileClient')) { 
+        errorText.innerText = 'Oops! Is your handle spelled right?';
     } 
     else { 
         errorText.innerText = 'Oops! Is your handle spelled correctly?';
@@ -95,7 +115,7 @@ let requestNonFollowers = async (handle) => {
 
     // POST /api/nonfollower will return 200 with error property if handle does not exist
     if ('error' in response.data) {
-        throw new Error();
+        throw new Error(response.data.error);
     }
 
     return response.data;
