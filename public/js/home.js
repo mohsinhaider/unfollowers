@@ -2,6 +2,13 @@ const inputRow = document.querySelector('#input-row');
 const submitButton = document.querySelector('#submit-button');
 const usernameInput = document.querySelector('#username-input');
 
+usernameInput.addEventListener('keyup', (event) => {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        submitButton.click();
+    }
+});
+
 submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
     const handle = (usernameInput.value).trim();
