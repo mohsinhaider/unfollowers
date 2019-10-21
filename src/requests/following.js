@@ -22,7 +22,7 @@ module.exports = {
             }
             let followingRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followingGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followingVariables))}`;
 
-            const totalFollowingCount = targetInstagramUserMetadata.edge_follow.count;
+            const totalFollowingCount = targetInstagramUserMetadata.followingCount;
             let batchRequestCount = Math.ceil(totalFollowingCount / followingBatchCount);
 
             let following = [];
