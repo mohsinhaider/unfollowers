@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
     }
     catch (error) {
         // Move non-follower USERID catch switch here
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 
     res.status(200).send(metadataPayload);
