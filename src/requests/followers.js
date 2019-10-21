@@ -24,7 +24,7 @@ module.exports = {
             let followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`;
 
             // Set number of followers to grab in total and calculate total number of needed requests
-            const totalFollowerCount = targetInstagramUserMetadata.edge_followed_by.count;
+            const totalFollowerCount = targetInstagramUserMetadata.followerCount;
             let batchRequestCount = Math.ceil(totalFollowerCount / followerBatchCount);
 
             // Initialize array to store followers retrieved and string to hold the 'after' query string parameter's value, which 

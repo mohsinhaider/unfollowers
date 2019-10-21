@@ -11,16 +11,18 @@ router.get('/', async (req, res) => {
     try {
         rawMetadata = await metadata(targetInstagramUsername);
         metadataPayload = {
-            id: rawMetadata.id,
-            username: rawMetadata.user,
-            fullName: rawMetadata.full_name,
-            followerCount: rawMetadata.edge_followed_by.count,
-            followingCount: rawMetadata.edge_follow.count
+            metadata: {
+                id: rawMetadata.id,
+                username: rawMetadata.user,
+                fullName: rawMetadata.full_name,
+                followerCount: rawMetadata.edge_followed_by.count,
+                followingCount: rawMetadata.edge_follow.count
+            }
         }
     }
     catch (error) {
         // Move non-follower USERID catch switch here
-        res.sendStatus(500);
+        return res.sendStatus(500);
     }
 
     res.status(200).send(metadataPayload);

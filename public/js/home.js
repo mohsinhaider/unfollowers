@@ -24,7 +24,8 @@ submitButton.addEventListener('click', async () => {
 
             let nonfollowers = null;
             try {
-                nonfollowers = await requestNonFollowers(handle);
+                const userMetadata = await requestMetadata(handle);
+                nonfollowers = await requestNonfollowers(userMetadata);
             }
             catch (error) {
                 // Reached by server-side Promise rejects for:
@@ -110,14 +111,19 @@ let removeErrorFlash = () => {
     errorFlash.parentNode.removeChild(errorFlash);
 }
 
-let requestNonFollowers = async (handle) => {
-    const response = await axios.post('/api/nonfollower', { username: handle });
+let requestNonfollowers = async (userMetadata) => {
+    const response = await axios.post('/api/nonfollower', userMetadata);
 
     // POST /api/nonfollower will return 200 with error property if handle does not exist
     if ('error' in response.data) {
         throw new Error(response.data.error);
     }
 
+    return response.data;
+}
+
+let requestMetadata = async (handle) => {
+    const response = await axios.get('/api/metadata', { params: { username: handle } });
     return response.data;
 }
 
