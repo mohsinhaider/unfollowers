@@ -112,7 +112,7 @@ let removeErrorFlash = () => {
 }
 
 let requestNonfollowers = async (userMetadata) => {
-    const response = await axios.post('/api/nonfollower', { metadata: userMetadata });
+    const response = await axios.post('/api/nonfollower', userMetadata);
 
     // POST /api/nonfollower will return 200 with error property if handle does not exist
     if ('error' in response.data) {
