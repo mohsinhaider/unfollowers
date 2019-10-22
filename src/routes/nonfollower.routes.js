@@ -15,46 +15,36 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
     let followerUsernames, followingUsernames, nonfollowerUsernames = [];
-    try {
-        // Execute requests to get follower and following users together
-        Promise.all([
-            followers(targetInstagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE),
-            following(targetInstagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE)
-        ]).then(result => {
-            followerUsernames = result[0];
-            followingUsernames = result[1];
 
-            // For each following user, check if they are a follower, if not, they are a 'nonfollower'
-            followingUsernames.forEach(followingUser => {
-                let foundUser = false;
-                // followingUser & followerUsername[i] schema: 
-                //      { username: 'this', profilePicUrl: 'that' }
-                for (let i = 0; i < followerUsernames.length; i++) {
-                    if (followerUsernames[i].username === followingUser.username) {
-                        foundUser = true;
-                        break;
-                    }
-                }
-                if (!foundUser) {
-                    nonfollowerUsernames.push(followingUser);
-                }
-            });
+    // Execute requests to get follower and following users together
+    Promise.all([
+        followers(targetInstagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE),
+        following(targetInstagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE)
+    ]).then(result => {
+        followerUsernames = result[0];
+        followingUsernames = result[1];
 
-            res.status(200).send(nonfollowerUsernames);
+        // For each following user, check if they are a follower, if not, they are a 'nonfollower'
+        followingUsernames.forEach(followingUser => {
+            let foundUser = false;
+            // followingUser & followerUsername[i] schema: 
+            //      { username: 'this', profilePicUrl: 'that' }
+            for (let i = 0; i < followerUsernames.length; i++) {
+                if (followerUsernames[i].username === followingUser.username) {
+                    foundUser = true;
+                    break;
+                }
+            }
+            if (!foundUser) {
+                nonfollowerUsernames.push(followingUser);
+            }
         });
-    }
-    catch (error) {
-        switch (error) {
-            case USERID_REQUEST_ERROR_404:
-                res.status(200).send({ error: USERID_REQUEST_ERROR_404 });
-                break;
-            case USERID_REQUEST_ERROR_PRIVATE_USER:
-                res.status(200).send({ error: USERID_REQUEST_ERROR_PRIVATE_USER });
-                break;
-            default:
-                res.status(500).send(error);
-        }
-    }
+
+        res.status(200).send(nonfollowerUsernames);
+    })
+    .catch(error => {
+        res.sendStatus(500);
+    });
 });
 
 /**
