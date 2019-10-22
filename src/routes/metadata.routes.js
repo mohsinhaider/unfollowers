@@ -1,5 +1,6 @@
 const express = require('express');
-const { metadata } = require('../requests/metadata') 
+const { metadata } = require('../requests/metadata');
+const { USERID_REQUEST_ERROR_404, USERID_REQUEST_ERROR_PRIVATE_USER } = require('../constants/responses');
 
 const router = express.Router();
 
@@ -21,8 +22,14 @@ router.get('/', async (req, res) => {
         }
     }
     catch (error) {
-        // Move non-follower USERID catch switch here
-        return res.sendStatus(500);
+        switch (error) {
+            case USERID_REQUEST_ERROR_404:
+                return res.status(200).send({ error: 'Oops! Is your handle spelled correctly?' });
+            case USERID_REQUEST_ERROR_PRIVATE_USER:
+                return res.status(200).send({ error: 'Oops! Your profile must be public to use Straws.' });
+            default:
+                return res.status(500).send(error);
+        }
     }
 
     res.status(200).send(metadataPayload);

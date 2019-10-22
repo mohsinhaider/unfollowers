@@ -1,0 +1,1 @@
+const errorMessages = ['Oops! Is your handle spelled right?', 'Oops! Is your handle spelled correctly?', 'Oops! Something went wrong, try again.', 'Oops! Your profile must be public to use Straws.']

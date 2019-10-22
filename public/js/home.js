@@ -28,12 +28,9 @@ submitButton.addEventListener('click', async () => {
                 nonfollowers = await requestNonfollowers(userMetadata);
             }
             catch (error) {
-                // Reached by server-side Promise rejects for:
-                // * Non-existent user
-                // * Private user
                 let fn = null;
-                if (error.message === USERID_REQUEST_ERROR_PRIVATE_USER) {
-                    fn = () => renderErrorFlash('Oops! Your profile must be public to use Straws.');
+                if (errorMessages.includes(error.message)) {
+                    fn = () => renderErrorFlash(error.message);
                 } else {
                     fn = renderErrorFlash;
                 }
@@ -114,6 +111,10 @@ let removeErrorFlash = () => {
 let requestNonfollowers = async (userMetadata) => {
     const response = await axios.post('/api/nonfollower', userMetadata);
 
+    if (response.status === 500) {
+        throw new Error('Oops! Something went wrong, try again.');
+    }
+
     // POST /api/nonfollower will return 200 with error property if handle does not exist
     if ('error' in response.data) {
         throw new Error(response.data.error);
@@ -124,6 +125,15 @@ let requestNonfollowers = async (userMetadata) => {
 
 let requestMetadata = async (handle) => {
     const response = await axios.get('/api/metadata', { params: { username: handle } });
+
+    if (response.status === 500) {
+        throw new Error('Oops! Something went wrong, try again.');
+    }
+
+    if (response.status === 200 && 'error' in response.data) {
+        throw new Error(response.data.error);
+    }
+
     return response.data;
 }
 
