@@ -81,10 +81,10 @@ let renderProfileHeader = (userMetadata) => {
 
     let followersCell = profileHeaderTableRow.insertCell(0);
     if (State.get('isMobileClient')) {
-        followersCell.innerHTML = `<p>${userMetadata.metadata.followerCount}</p><p>Followers</p>`;
+        followersCell.innerHTML = `<p><b>${userMetadata.metadata.followerCount}</b></p><p style="color: #999999">followers</p>`;
     }
     else {
-        followersCell.innerHTML = `<p style="padding-left: 20%;">${userMetadata.metadata.followerCount}</p><p style="padding-left: 20%;">Followers</p>`;
+        followersCell.innerHTML = `<p style="padding-left: 20%;"><b>${userMetadata.metadata.followerCount}</b></p><p style="padding-left: 20%; color: #999999;">followers</p>`;
     }
     followersCell.style.textAlign = 'center';
 
@@ -100,12 +100,11 @@ let renderProfileHeader = (userMetadata) => {
 
     let followingCell = profileHeaderTableRow.insertCell(2);
     if (State.get('isMobileClient')) {
-        followingCell.innerHTML = `<p>${userMetadata.metadata.followingCount}</p><p>Following</p>`;
+        followingCell.innerHTML = `<p><b>${userMetadata.metadata.followingCount}</b></p><p style="color: #999999">following</p>`;
     }
     else {
-        followingCell.innerHTML = `<p style="padding-right: 20%;">${userMetadata.metadata.followingCount}</p><p style="padding-right: 20%;>Following</p>`;
+        followingCell.innerHTML = `<p style="padding-right: 20%;"><b>${userMetadata.metadata.followingCount}</b></p><p style="padding-right: 20%; color: #999999;">following</p>`;
     }
-    followingCell.innerHTML = `<p>${userMetadata.metadata.followingCount}</p><p>Following</p>`;
     followingCell.style.textAlign = 'center';
 
     profileHeaderDiv.appendChild(profileHeaderTable);
