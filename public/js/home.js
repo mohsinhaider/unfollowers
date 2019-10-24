@@ -80,16 +80,17 @@ let renderProfileHeader = (userMetadata) => {
     let profileHeaderTableRow = profileHeaderTable.insertRow();
 
     let followersCell = profileHeaderTableRow.insertCell(0);
-    followersCell.innerHTML = '<p>100 followers</p>';
-    followersCell.style.textAlign = 'center';
+    followersCell.innerHTML = `<p style="padding-right: 18px">${userMetadata.metadata.followerCount}</p><p>Followers</p>`;
+    followersCell.style.textAlign = 'right';
 
     let profilePictureCell = profileHeaderTableRow.insertCell(1);
     profilePictureCell.innerHTML = profilePicture.outerHTML;
     profilePictureCell.style.textAlign = 'center';
+    profilePictureCell.style.width = '50%'
 
     let followingCell = profileHeaderTableRow.insertCell(2);
-    followingCell.innerHTML = '<p>100 following</p>';
-    followingCell.style.textAlign = 'center';
+    followingCell.innerHTML = `<p style="padding-left: 18px">${userMetadata.metadata.followingCount}</p><p>Following</p>`;
+    followingCell.style.textAlign = 'left';
 
     profileHeaderDiv.appendChild(profileHeaderTable);
     profileHeaderColumns.appendChild(profileHeaderDiv);
