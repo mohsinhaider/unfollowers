@@ -38,7 +38,7 @@ submitButton.addEventListener('click', async () => {
                 State.update('isErrorFlashOn', true, fn);
                 return;
             }
-            // State.update('isNonfollowerTableOn', true, () => renderNonfollowersTable(nonfollowers));
+            State.update('isNonfollowerTableOn', true, () => renderNonfollowersTable(nonfollowers));
         } 
         else {
             State.update('isErrorFlashOn', true, renderErrorFlash);
@@ -81,12 +81,15 @@ let renderProfileHeader = (userMetadata) => {
 
     let followersCell = profileHeaderTableRow.insertCell(0);
     followersCell.innerHTML = '<p>100 followers</p>';
+    followersCell.style.textAlign = 'center';
 
     let profilePictureCell = profileHeaderTableRow.insertCell(1);
     profilePictureCell.innerHTML = profilePicture.outerHTML;
+    profilePictureCell.style.textAlign = 'center';
 
     let followingCell = profileHeaderTableRow.insertCell(2);
     followingCell.innerHTML = '<p>100 following</p>';
+    followingCell.style.textAlign = 'center';
 
     profileHeaderDiv.appendChild(profileHeaderTable);
     profileHeaderColumns.appendChild(profileHeaderDiv);
@@ -208,7 +211,9 @@ let renderNonfollowersTable = (nonfollowers) => {
 
     nonfollowerColumns.appendChild(nonfollowerTable);
     nonfollowerRow.appendChild(nonfollowerColumns);
-    nonfollowerRow.appendAfter(inputRow);
+
+    let profileHeaderRow = document.querySelector('#profile-header-row');
+    nonfollowerRow.appendAfter(profileHeaderRow);
 }
 
 let removeNonfollowersTable = () => {
