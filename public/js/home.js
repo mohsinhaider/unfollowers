@@ -25,6 +25,7 @@ submitButton.addEventListener('click', async () => {
             let nonfollowers = null;
             try {
                 const userMetadata = await requestMetadata(handle);
+                State.update('isProfileHeaderOn', true, () => renderProfileHeader(userMetadata));
                 nonfollowers = await requestNonfollowers(userMetadata);
             }
             catch (error) {
@@ -56,6 +57,61 @@ let isValidHandleFormat = (handle) => {
         return false;
     }
     return true;
+}
+
+let renderProfileHeader = (userMetadata) => {
+    let profileHeaderRow = document.createElement('div');
+    profileHeaderRow.className = 'row';
+    profileHeaderRow.id = 'profile-header-row';
+
+    let profileHeaderColumns = document.createElement('div');
+    profileHeaderColumns.className = 'col s12';
+
+    let profileHeaderDiv = document.createElement('div');
+    profileHeaderDiv.id = 'profile-header';
+
+    let profilePicture = document.createElement('img');
+    profilePicture.src = userMetadata.metadata.profilePictureUrl;
+    profilePicture.style.width = '100px';
+    profilePicture.style.height = '100px';
+    profilePicture.className = 'round-full';
+
+    let profileHeaderTable = document.createElement('table');
+    let profileHeaderTableRow = profileHeaderTable.insertRow();
+
+    let followersCell = profileHeaderTableRow.insertCell(0);
+    if (State.get('isMobileClient')) {
+        followersCell.innerHTML = `<p><b>${userMetadata.metadata.followerCount}</b></p><p style="color: #999999">followers</p>`;
+    }
+    else {
+        followersCell.innerHTML = `<p style="padding-left: 20%;"><b>${userMetadata.metadata.followerCount}</b></p><p style="padding-left: 20%; color: #999999;">followers</p>`;
+    }
+    followersCell.style.textAlign = 'center';
+
+    let profilePictureCell = profileHeaderTableRow.insertCell(1);
+    profilePictureCell.innerHTML = profilePicture.outerHTML;
+    profilePictureCell.style.textAlign = 'center';
+    if (State.get('isMobileClient')) {
+        profilePictureCell.style.width = '50%'
+    }
+    else {
+        profilePictureCell.style.width = '1%'
+    }
+
+    let followingCell = profileHeaderTableRow.insertCell(2);
+    if (State.get('isMobileClient')) {
+        followingCell.innerHTML = `<p><b>${userMetadata.metadata.followingCount}</b></p><p style="color: #999999">following</p>`;
+    }
+    else {
+        followingCell.innerHTML = `<p style="padding-right: 20%;"><b>${userMetadata.metadata.followingCount}</b></p><p style="padding-right: 20%; color: #999999;">following</p>`;
+    }
+    followingCell.style.textAlign = 'center';
+
+    profileHeaderDiv.appendChild(profileHeaderTable);
+    profileHeaderColumns.appendChild(profileHeaderDiv);
+    profileHeaderRow.appendChild(profileHeaderColumns);
+
+    profileHeaderRow.appendAfter(inputRow);
 }
 
 let renderErrorFlash = (errorMessage = '') => {
@@ -171,7 +227,9 @@ let renderNonfollowersTable = (nonfollowers) => {
 
     nonfollowerColumns.appendChild(nonfollowerTable);
     nonfollowerRow.appendChild(nonfollowerColumns);
-    nonfollowerRow.appendAfter(inputRow);
+
+    let profileHeaderRow = document.querySelector('#profile-header-row');
+    nonfollowerRow.appendAfter(profileHeaderRow);
 }
 
 let removeNonfollowersTable = () => {

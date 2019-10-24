@@ -32,6 +32,10 @@
     border-radius: 15px 15px 15px 15px;
 }
 
+.round-full {
+    border-radius: 50%;
+}
+
 #submit-button {
     text-transform: none;
 }
