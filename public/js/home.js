@@ -25,6 +25,7 @@ submitButton.addEventListener('click', async () => {
             let nonfollowers = null;
             try {
                 const userMetadata = await requestMetadata(handle);
+                State.update('isProfileHeaderOn', true, () => renderProfileHeader(userMetadata));
                 nonfollowers = await requestNonfollowers(userMetadata);
             }
             catch (error) {
@@ -37,7 +38,7 @@ submitButton.addEventListener('click', async () => {
                 State.update('isErrorFlashOn', true, fn);
                 return;
             }
-            State.update('isNonfollowerTableOn', true, () => renderNonfollowersTable(nonfollowers));
+            // State.update('isNonfollowerTableOn', true, () => renderNonfollowersTable(nonfollowers));
         } 
         else {
             State.update('isErrorFlashOn', true, renderErrorFlash);
@@ -56,6 +57,30 @@ let isValidHandleFormat = (handle) => {
         return false;
     }
     return true;
+}
+
+let renderProfileHeader = (userMetadata) => {
+    let profileHeaderRow = document.createElement('div');
+    profileHeaderRow.className = 'row';
+    profileHeaderRow.id = 'profile-header-row';
+
+    let profileHeaderColumns = document.createElement('div');
+    profileHeaderColumns.className = 'col s12';
+
+    let profileHeaderDiv = document.createElement('div');
+    profileHeaderDiv.id = 'profile-header';
+
+    let profilePicture = document.createElement('img');
+    profilePicture.src = userMetadata.metadata.profilePictureUrl;
+    profilePicture.style.width = '100px';
+    profilePicture.style.height = '100px';
+    profilePicture.className = 'round-full';
+
+    profileHeaderDiv.appendChild(profilePicture);
+    profileHeaderColumns.appendChild(profileHeaderDiv);
+    profileHeaderRow.appendChild(profileHeaderColumns);
+
+    profileHeaderRow.appendAfter(inputRow);
 }
 
 let renderErrorFlash = (errorMessage = '') => {
