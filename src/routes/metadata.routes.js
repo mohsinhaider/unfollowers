@@ -17,7 +17,8 @@ router.get('/', async (req, res) => {
                 username: rawMetadata.user,
                 fullName: rawMetadata.full_name,
                 followerCount: rawMetadata.edge_followed_by.count,
-                followingCount: rawMetadata.edge_follow.count
+                followingCount: rawMetadata.edge_follow.count,
+                profilePictureUrl: rawMetadata.profile_pic_url_hd
             }
         }
     }
