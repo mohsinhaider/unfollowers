@@ -80,17 +80,33 @@ let renderProfileHeader = (userMetadata) => {
     let profileHeaderTableRow = profileHeaderTable.insertRow();
 
     let followersCell = profileHeaderTableRow.insertCell(0);
-    followersCell.innerHTML = `<p style="padding-right: 18px">${userMetadata.metadata.followerCount}</p><p>Followers</p>`;
-    followersCell.style.textAlign = 'right';
+    if (State.get('isMobileClient')) {
+        followersCell.innerHTML = `<p>${userMetadata.metadata.followerCount}</p><p>Followers</p>`;
+    }
+    else {
+        followersCell.innerHTML = `<p style="padding-left: 20%;">${userMetadata.metadata.followerCount}</p><p style="padding-left: 20%;">Followers</p>`;
+    }
+    followersCell.style.textAlign = 'center';
 
     let profilePictureCell = profileHeaderTableRow.insertCell(1);
     profilePictureCell.innerHTML = profilePicture.outerHTML;
     profilePictureCell.style.textAlign = 'center';
-    profilePictureCell.style.width = '50%'
+    if (State.get('isMobileClient')) {
+        profilePictureCell.style.width = '50%'
+    }
+    else {
+        profilePictureCell.style.width = '1%'
+    }
 
     let followingCell = profileHeaderTableRow.insertCell(2);
-    followingCell.innerHTML = `<p style="padding-left: 18px">${userMetadata.metadata.followingCount}</p><p>Following</p>`;
-    followingCell.style.textAlign = 'left';
+    if (State.get('isMobileClient')) {
+        followingCell.innerHTML = `<p>${userMetadata.metadata.followingCount}</p><p>Following</p>`;
+    }
+    else {
+        followingCell.innerHTML = `<p style="padding-right: 20%;">${userMetadata.metadata.followingCount}</p><p style="padding-right: 20%;>Following</p>`;
+    }
+    followingCell.innerHTML = `<p>${userMetadata.metadata.followingCount}</p><p>Following</p>`;
+    followingCell.style.textAlign = 'center';
 
     profileHeaderDiv.appendChild(profileHeaderTable);
     profileHeaderColumns.appendChild(profileHeaderDiv);
