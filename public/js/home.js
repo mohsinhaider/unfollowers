@@ -76,7 +76,19 @@ let renderProfileHeader = (userMetadata) => {
     profilePicture.style.height = '100px';
     profilePicture.className = 'round-full';
 
-    profileHeaderDiv.appendChild(profilePicture);
+    let profileHeaderTable = document.createElement('table');
+    let profileHeaderTableRow = profileHeaderTable.insertRow();
+
+    let followersCell = profileHeaderTableRow.insertCell(0);
+    followersCell.innerHTML = '<p>100 followers</p>';
+
+    let profilePictureCell = profileHeaderTableRow.insertCell(1);
+    profilePictureCell.innerHTML = profilePicture.outerHTML;
+
+    let followingCell = profileHeaderTableRow.insertCell(2);
+    followingCell.innerHTML = '<p>100 following</p>';
+
+    profileHeaderDiv.appendChild(profileHeaderTable);
     profileHeaderColumns.appendChild(profileHeaderDiv);
     profileHeaderRow.appendChild(profileHeaderColumns);
 
