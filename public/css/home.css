@@ -1,3 +1,31 @@
+@media screen and (max-device-width: 480px) {
+    #profile-picture-cell {
+        width: 50%;
+    }
+}
+
+@media screen and (min-device-width: 481px) {
+    #profile-picture-cell {
+        width: 1%;
+    }
+
+    #following-cell-count-paragraph {
+        padding-right: 20%;
+    }
+
+    #following-cell-subtext-paragraph {
+        padding-right: 20%;
+    }
+
+    #followers-cell-count-paragraph {
+        padding-left: 20%;
+    }
+
+    #followers-cell-subtext-paragraph {
+        padding-left: 20%;
+    }
+}
+
 #home-hero {
     background: url('/img/home-hero.jpg') 70% 0 no-repeat;
     background-size: cover;
@@ -25,6 +53,15 @@
     margin-top: 16px;
 }
 
+.profile-header-cell {
+    text-align: center;
+}
+
+#profile-picture {
+    width: 100px;
+    height: 100px;
+}
+
 .round-corner {
     -webkit-border-radius: 15px 15px 15px 15px;
     -moz-border-radius: 15px 15px 15px 15px;
@@ -33,6 +70,9 @@
 }
 
 .round-full {
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -o-border-radius: 50%;
     border-radius: 50%;
 }
 
