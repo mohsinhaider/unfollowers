@@ -4,9 +4,25 @@
     }
 }
 
-@media screen and (min-device-width: 480px) {
+@media screen and (min-device-width: 481px) {
     #profile-picture-cell {
         width: 1%;
+    }
+
+    #following-cell-count-paragraph {
+        padding-right: 20%;
+    }
+
+    #following-cell-subtext-paragraph {
+        padding-right: 20%;
+    }
+
+    #followers-cell-count-paragraph {
+        padding-left: 20%;
+    }
+
+    #followers-cell-subtext-paragraph {
+        padding-left: 20%;
     }
 }
 

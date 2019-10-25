@@ -78,20 +78,17 @@ let renderProfileHeader = (userMetadata) => {
     followersCell.className = 'profile-header-cell';
 
     let followersCellCountParagraph = document.createElement('p');
+    followersCellCountParagraph.id = 'followers-cell-count-paragraph';
 
     let followersCellBold = document.createElement('b');
     followersCellBold.innerText = `${userMetadata.metadata.followerCount}`
 
     let followersCellSubtextParagraph = document.createElement('p');
+    followersCellSubtextParagraph.id = 'followers-cell-subtext-paragraph';
     followersCellSubtextParagraph.style.color = '#999999';
     followersCellSubtextParagraph.innerText = 'followers';
 
-    if (!State.get('isMobileClient')) {
-        followersCellCountParagraph.style.paddingLeft = '20%';
-        followersCellSubtextParagraph.style.paddingLeft = '20%';
-    }
     followersCellCountParagraph.appendChild(followersCellBold);
-
     followersCell.appendChild(followersCellCountParagraph);
     followersCell.appendChild(followersCellSubtextParagraph);
 
@@ -109,14 +106,23 @@ let renderProfileHeader = (userMetadata) => {
 
     // Create following cell
     let followingCell = profileHeaderTableRow.insertCell(2);
-    if (State.get('isMobileClient')) {
-        followingCell.innerHTML = `<p><b>${userMetadata.metadata.followingCount}</b></p><p style="color: #999999">following</p>`;
-    }
-    else {
-        followingCell.innerHTML = `<p style="padding-right: 20%;"><b>${userMetadata.metadata.followingCount}</b></p><p style="padding-right: 20%; color: #999999;">following</p>`;
-    }
     followingCell.className = 'profile-header-cell';
+    let followingCellCountParagraph = document.createElement('p');
+    followingCellCountParagraph.id = 'following-cell-count-paragraph';
 
+    let followingCellBold = document.createElement('b');
+    followingCellBold.innerText = `${userMetadata.metadata.followingCount}`
+
+    let followingCellSubtextParagraph = document.createElement('p');
+    followingCellSubtextParagraph.id = 'following-cell-subtext-paragraph';
+    followingCellSubtextParagraph.style.color = '#999999';
+    followingCellSubtextParagraph.innerText = 'following';
+
+    followingCellCountParagraph.appendChild(followingCellBold);
+    followingCell.appendChild(followingCellCountParagraph);
+    followingCell.appendChild(followingCellSubtextParagraph);
+
+    // Render the table onto the page by attaching it to the materialize components
     profileHeaderDiv.appendChild(profileHeaderTable);
     profileHeaderColumns.appendChild(profileHeaderDiv);
     profileHeaderRow.appendChild(profileHeaderColumns);
