@@ -24,7 +24,9 @@ submitButton.addEventListener('click', async () => {
 
             let nonfollowers = null;
             try {
+                State.update('isLoadingAnimationOn', true, () => renderProfileHeaderLoadingAnimation())
                 const userMetadata = await requestMetadata(handle);
+                State.update('isLoadingAnimationOn', false, () => removeProfileHeaderLoadingAnimation())
                 State.update('isProfileHeaderOn', true, () => renderProfileHeader(userMetadata));
                 nonfollowers = await requestNonfollowers(userMetadata);
             }
@@ -57,6 +59,17 @@ let isValidHandleFormat = (handle) => {
         return false;
     }
     return true;
+}
+
+let renderProfileHeaderLoadingAnimation = () => {
+    let animationDiv = document.createElement('div');
+    animationDiv.className = 'loading-animation';
+    animationDiv.appendAfter(inputRow);
+}
+
+let removeProfileHeaderLoadingAnimation = () => {
+    let animationDiv = document.querySelector('.loading-animation');
+    animationDiv.parentNode.removeChild(animationDiv);
 }
 
 let renderProfileHeader = (userMetadata) => {
@@ -126,7 +139,6 @@ let renderProfileHeader = (userMetadata) => {
     profileHeaderDiv.appendChild(profileHeaderTable);
     profileHeaderColumns.appendChild(profileHeaderDiv);
     profileHeaderRow.appendChild(profileHeaderColumns);
-
     profileHeaderRow.appendAfter(inputRow);
 }
 
