@@ -72,9 +72,8 @@ let renderProfileHeader = (userMetadata) => {
 
     let profilePicture = document.createElement('img');
     profilePicture.src = userMetadata.metadata.profilePictureUrl;
-    profilePicture.style.width = '100px';
-    profilePicture.style.height = '100px';
     profilePicture.className = 'round-full';
+    profilePicture.id = 'profile-picture';
 
     let profileHeaderTable = document.createElement('table');
     let profileHeaderTableRow = profileHeaderTable.insertRow();
@@ -86,17 +85,17 @@ let renderProfileHeader = (userMetadata) => {
     else {
         followersCell.innerHTML = `<p style="padding-left: 20%;"><b>${userMetadata.metadata.followerCount}</b></p><p style="padding-left: 20%; color: #999999;">followers</p>`;
     }
-    followersCell.style.textAlign = 'center';
+    followersCell.className = 'profile-header-cell';
 
     let profilePictureCell = profileHeaderTableRow.insertCell(1);
     profilePictureCell.innerHTML = profilePicture.outerHTML;
-    profilePictureCell.style.textAlign = 'center';
     if (State.get('isMobileClient')) {
         profilePictureCell.style.width = '50%'
     }
     else {
         profilePictureCell.style.width = '1%'
     }
+    profilePictureCell.className = 'profile-header-cell';
 
     let followingCell = profileHeaderTableRow.insertCell(2);
     if (State.get('isMobileClient')) {
@@ -105,7 +104,7 @@ let renderProfileHeader = (userMetadata) => {
     else {
         followingCell.innerHTML = `<p style="padding-right: 20%;"><b>${userMetadata.metadata.followingCount}</b></p><p style="padding-right: 20%; color: #999999;">following</p>`;
     }
-    followingCell.style.textAlign = 'center';
+    followingCell.className = 'profile-header-cell';
 
     profileHeaderDiv.appendChild(profileHeaderTable);
     profileHeaderColumns.appendChild(profileHeaderDiv);

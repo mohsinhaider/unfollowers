@@ -25,6 +25,15 @@
     margin-top: 16px;
 }
 
+.profile-header-cell {
+    text-align: center;
+}
+
+#profile-picture {
+    width: 100px;
+    height: 100px;
+}
+
 .round-corner {
     -webkit-border-radius: 15px 15px 15px 15px;
     -moz-border-radius: 15px 15px 15px 15px;
