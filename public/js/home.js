@@ -24,13 +24,20 @@ submitButton.addEventListener('click', async () => {
 
             let nonfollowers = null;
             try {
-                State.update('isLoadingAnimationOn', true, () => renderProfileHeaderLoadingAnimation())
+                State.update('isLoadingAnimationOn', true, () => renderProfileHeaderLoadingAnimation());
                 const userMetadata = await requestMetadata(handle);
-                State.update('isLoadingAnimationOn', false, () => removeProfileHeaderLoadingAnimation())
+                State.update('isLoadingAnimationOn', false, () => removeProfileHeaderLoadingAnimation());
                 State.update('isProfileHeaderOn', true, () => renderProfileHeader(userMetadata));
+
+                State.update('isLoadingAnimation2On', true, () => renderNonfollowersTableLoadingAnimation());
                 nonfollowers = await requestNonfollowers(userMetadata);
+                State.update('isLoadingAnimation2On', false, () => removeNonfollowersTableLoadingAnimation());
+
+                State.update('isNonfollowerTableOn', true, () => renderNonfollowersTable(nonfollowers));
             }
             catch (error) {
+                State.update('isLoadingAnimationOn', false, () => removeProfileHeaderLoadingAnimation());
+                State.update('isLoadingAnimation2On', false, () => removeNonfollowersTableLoadingAnimation());
                 let fn = null;
                 if (errorMessages.includes(error.message)) {
                     fn = () => renderErrorFlash(error.message);
@@ -40,7 +47,6 @@ submitButton.addEventListener('click', async () => {
                 State.update('isErrorFlashOn', true, fn);
                 return;
             }
-            State.update('isNonfollowerTableOn', true, () => renderNonfollowersTable(nonfollowers));
         } 
         else {
             State.update('isErrorFlashOn', true, renderErrorFlash);
@@ -61,14 +67,32 @@ let isValidHandleFormat = (handle) => {
     return true;
 }
 
+let renderNonfollowersTableLoadingAnimation = () => {
+    let animationImg = document.createElement('img');
+    animationImg.id = 'loading-animation2';
+    animationImg.src = '/img/loading.gif';
+    animationImg.style.width = '137px';
+    animationImg.style.height = '187px';
+    animationImg.style.margin = '0px auto';
+    animationImg.style.display = 'block';
+
+    let profileHeaderRow = document.querySelector('#profile-header-row');
+    animationImg.appendAfter(profileHeaderRow);
+}
+
+let removeNonfollowersTableLoadingAnimation = () => {
+    let animationDiv = document.querySelector('#loading-animation2');
+    animationDiv.parentNode.removeChild(animationDiv);
+}
+
 let renderProfileHeaderLoadingAnimation = () => {
     let animationDiv = document.createElement('div');
-    animationDiv.className = 'loading-animation';
+    animationDiv.id = 'loading-animation';
     animationDiv.appendAfter(inputRow);
 }
 
 let removeProfileHeaderLoadingAnimation = () => {
-    let animationDiv = document.querySelector('.loading-animation');
+    let animationDiv = document.querySelector('#loading-animation');
     animationDiv.parentNode.removeChild(animationDiv);
 }
 
