@@ -60,43 +60,54 @@ let isValidHandleFormat = (handle) => {
 }
 
 let renderProfileHeader = (userMetadata) => {
+    // Set up materialize row and columns
     let profileHeaderRow = document.createElement('div');
     profileHeaderRow.className = 'row';
     profileHeaderRow.id = 'profile-header-row';
-
     let profileHeaderColumns = document.createElement('div');
     profileHeaderColumns.className = 'col s12';
 
+    // Create div and table to hold the 3 cells: followers, profile pic, and following.
     let profileHeaderDiv = document.createElement('div');
     profileHeaderDiv.id = 'profile-header';
+    let profileHeaderTable = document.createElement('table');
+    let profileHeaderTableRow = profileHeaderTable.insertRow();
 
+    // Create 'XYZ followers' cell
+    let followersCell = profileHeaderTableRow.insertCell(0);
+    followersCell.className = 'profile-header-cell';
+
+    let followersCellCountParagraph = document.createElement('p');
+
+    let followersCellBold = document.createElement('b');
+    followersCellBold.innerText = `${userMetadata.metadata.followerCount}`
+
+    let followersCellSubtextParagraph = document.createElement('p');
+    followersCellSubtextParagraph.style.color = '#999999';
+    followersCellSubtextParagraph.innerText = 'followers';
+
+    if (!State.get('isMobileClient')) {
+        followersCellCountParagraph.style.paddingLeft = '20%';
+        followersCellSubtextParagraph.style.paddingLeft = '20%';
+    }
+    followersCellCountParagraph.appendChild(followersCellBold);
+
+    followersCell.appendChild(followersCellCountParagraph);
+    followersCell.appendChild(followersCellSubtextParagraph);
+
+    // Create profile picture <img>
     let profilePicture = document.createElement('img');
     profilePicture.src = userMetadata.metadata.profilePictureUrl;
     profilePicture.className = 'round-full';
     profilePicture.id = 'profile-picture';
 
-    let profileHeaderTable = document.createElement('table');
-    let profileHeaderTableRow = profileHeaderTable.insertRow();
-
-    let followersCell = profileHeaderTableRow.insertCell(0);
-    if (State.get('isMobileClient')) {
-        followersCell.innerHTML = `<p><b>${userMetadata.metadata.followerCount}</b></p><p style="color: #999999">followers</p>`;
-    }
-    else {
-        followersCell.innerHTML = `<p style="padding-left: 20%;"><b>${userMetadata.metadata.followerCount}</b></p><p style="padding-left: 20%; color: #999999;">followers</p>`;
-    }
-    followersCell.className = 'profile-header-cell';
-
+    // Create profile picture cell
     let profilePictureCell = profileHeaderTableRow.insertCell(1);
-    profilePictureCell.innerHTML = profilePicture.outerHTML;
-    if (State.get('isMobileClient')) {
-        profilePictureCell.style.width = '50%'
-    }
-    else {
-        profilePictureCell.style.width = '1%'
-    }
     profilePictureCell.className = 'profile-header-cell';
+    profilePictureCell.id = 'profile-picture-cell';
+    profilePictureCell.innerHTML = profilePicture.outerHTML;
 
+    // Create following cell
     let followingCell = profileHeaderTableRow.insertCell(2);
     if (State.get('isMobileClient')) {
         followingCell.innerHTML = `<p><b>${userMetadata.metadata.followingCount}</b></p><p style="color: #999999">following</p>`;
