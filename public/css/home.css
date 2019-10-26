@@ -117,9 +117,9 @@ html {
 .brand-logo {
     color: #4b20a8 !important;
     font-family: LeagueSpartan-Bold !important;
-    margin-left: 5px !important;
-    padding-top: 4px !important;
-    font-size: 26px !important;
+    margin-left: 0px !important;
+    padding-top: 3.75px !important;
+    font-size: 29px !important;
 }
 
 #username-input {
