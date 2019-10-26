@@ -45,6 +45,11 @@ html {
     }
 }
 
+.hamburger-entry {
+    font-family: 'Source Sans Pro Black', sans-serif;
+
+}
+
 #home-hero {
     background: url('/img/home-hero.jpg') 70% 0 no-repeat;
     background-size: cover;
