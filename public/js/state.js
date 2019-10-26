@@ -25,3 +25,10 @@ class State {
 }
 
 State.events = {};
+State.states = {
+    IS_ERROR_FLASH_ON: 'isErrorFlashOn',
+    IS_LOADING_ANIMATION_ON: 'isLoadingAnimationOn',
+    IS_LOADING_ANIMATION_2_ON: 'isLoadingAnimation2On',
+    IS_NONFOLLOWER_TABLE_ON: 'isNonfollowerTableOn',
+    IS_PROFILE_HEADER_ON: 'isProfileHeaderOn',
+}
