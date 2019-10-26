@@ -1,3 +1,7 @@
+html {
+    scroll-behavior: smooth;
+}
+
 #loading-animation {
     border: 5px solid #f3f3f3;
     border-radius: 50%;
