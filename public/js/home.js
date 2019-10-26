@@ -2,21 +2,15 @@ const inputRow = document.querySelector('#input-row');
 const submitButton = document.querySelector('#submit-button');
 const usernameInput = document.querySelector('#username-input');
 
-usernameInput.addEventListener('keyup', (event) => {
-    event.preventDefault();
-    if (event.keyCode === 13) {
-        submitButton.click();
-    }
-});
-
 submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
     let handle = (usernameInput.value).trim();
 
     if (handle) {
         // Clear components when new interface request happens
-        State.update('isNonfollowerTableOn', false, removeNonfollowersTable);
-        State.update('isErrorFlashOn', false, removeErrorFlash);
+        State.update(State.states["IS_PROFILE_HEADER_ON"], false, removeProfileHeader);
+        State.update(State.states["IS_NONFOLLOWER_TABLE_ON"], false, removeNonfollowersTable);
+        State.update(State.states["IS_ERROR_FLASH_ON"], false, removeErrorFlash);
 
         if (isValidHandleFormat(handle)) {
             // Check if user typed '@'
@@ -24,20 +18,21 @@ submitButton.addEventListener('click', async () => {
 
             let nonfollowers = null;
             try {
-                State.update('isLoadingAnimationOn', true, () => renderProfileHeaderLoadingAnimation());
+                State.update(State.states["IS_LOADING_ANIMATION_ON"], true, () => renderProfileHeaderLoadingAnimation());
                 const userMetadata = await requestMetadata(handle);
-                State.update('isLoadingAnimationOn', false, () => removeProfileHeaderLoadingAnimation());
-                State.update('isProfileHeaderOn', true, () => renderProfileHeader(userMetadata));
+                State.update(State.states["IS_LOADING_ANIMATION_ON"], false, () => removeProfileHeaderLoadingAnimation());
+                State.update(State.states["IS_PROFILE_HEADER_ON"], true, () => renderProfileHeader(userMetadata));
 
-                State.update('isLoadingAnimation2On', true, () => renderNonfollowersTableLoadingAnimation());
+                State.update(State.states["IS_LOADING_ANIMATION_2_ON"], true, () => renderNonfollowersTableLoadingAnimation());
+                scrollIntoLoadingAnimation2();
                 nonfollowers = await requestNonfollowers(userMetadata);
-                State.update('isLoadingAnimation2On', false, () => removeNonfollowersTableLoadingAnimation());
+                State.update(State.states["IS_LOADING_ANIMATION_2_ON"], false, () => removeNonfollowersTableLoadingAnimation());
 
-                State.update('isNonfollowerTableOn', true, () => renderNonfollowersTable(nonfollowers));
+                State.update(State.states["IS_NONFOLLOWER_TABLE_ON"], true, () => renderNonfollowersTable(nonfollowers));
             }
             catch (error) {
-                State.update('isLoadingAnimationOn', false, () => removeProfileHeaderLoadingAnimation());
-                State.update('isLoadingAnimation2On', false, () => removeNonfollowersTableLoadingAnimation());
+                State.update(State.states["IS_LOADING_ANIMATION_ON"], false, () => removeProfileHeaderLoadingAnimation());
+                State.update(State.states["IS_LOADING_ANIMATION_2_ON"], false, () => removeNonfollowersTableLoadingAnimation());
                 let fn = null;
                 if (errorMessages.includes(error.message)) {
                     fn = () => renderErrorFlash(error.message);
@@ -54,6 +49,13 @@ submitButton.addEventListener('click', async () => {
     }
 });
 
+usernameInput.addEventListener('keyup', (event) => {
+    event.preventDefault();
+    if (event.keyCode === 13) {
+        submitButton.click();
+    }
+});
+
 let isValidHandleFormat = (handle) => {
     const expression = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/);
 
@@ -65,6 +67,12 @@ let isValidHandleFormat = (handle) => {
         return false;
     }
     return true;
+}
+
+let scrollIntoLoadingAnimation2 = () => {
+    document.querySelector('#loading-animation2').scrollIntoView({
+        behavior: 'smooth'
+    });
 }
 
 let renderNonfollowersTableLoadingAnimation = () => {
@@ -164,6 +172,11 @@ let renderProfileHeader = (userMetadata) => {
     profileHeaderColumns.appendChild(profileHeaderDiv);
     profileHeaderRow.appendChild(profileHeaderColumns);
     profileHeaderRow.appendAfter(inputRow);
+}
+
+let removeProfileHeader = () => {
+    let profileHeaderRow = document.querySelector('#profile-header-row');
+    profileHeaderRow.parentNode.removeChild(profileHeaderRow);
 }
 
 let renderErrorFlash = (errorMessage = '') => {
