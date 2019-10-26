@@ -2,15 +2,9 @@ html {
     scroll-behavior: smooth;
 }
 
-#loading-animation {
-    border: 5px solid #f3f3f3;
-    border-radius: 50%;
-    border-top: 5px solid #595959;
-    width: 30px;
-    height: 30px;
-    -webkit-animation: spin 2s linear infinite; /* Safari */
-    animation: spin 0.7s linear infinite;
-    margin: 0 auto;
+@font-face {
+    font-family: LeagueSpartan-Bold;
+    src: url('../fonts/LeagueSpartan-Bold.otf');
 }
 
 @-webkit-keyframes spin {
@@ -78,6 +72,17 @@ html {
     margin-top: 16px;
 }
 
+#loading-animation {
+    border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid #595959;
+    width: 30px;
+    height: 30px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+}
+
 .profile-header-cell {
     text-align: center;
 }
@@ -107,6 +112,14 @@ html {
 
 #submit-button-parent {
     float: right;
+}
+
+.brand-logo {
+    color: #4b20a8 !important;
+    font-family: LeagueSpartan-Bold !important;
+    margin-left: 5px !important;
+    padding-top: 4px !important;
+    font-size: 26px !important;
 }
 
 #username-input {
