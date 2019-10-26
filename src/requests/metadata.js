@@ -12,6 +12,10 @@ module.exports = {
             request.get({
                 url: instagramUserMetadataUri
             }, (error, response) => {
+                if (response === undefined) {
+                    return reject(USERID_REQUEST_ERROR_404);
+                }
+
                 // User does not exist or metadata endpoint has been removed/changed
                 if (response.statusCode === 404) {
                     return reject(USERID_REQUEST_ERROR_404);
