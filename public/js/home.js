@@ -31,6 +31,8 @@ submitButton.addEventListener('click', async () => {
                 State.update(State.states["IS_NONFOLLOWER_TABLE_ON"], true, () => renderNonfollowersTable(nonfollowers));
             }
             catch (error) {
+                console.log(error);
+                console.log(error.message);
                 State.update(State.states["IS_LOADING_ANIMATION_ON"], false, () => removeProfileHeaderLoadingAnimation());
                 State.update(State.states["IS_LOADING_ANIMATION_2_ON"], false, () => removeNonfollowersTableLoadingAnimation());
                 let fn = null;
@@ -230,14 +232,18 @@ let removeErrorFlash = () => {
 }
 
 let requestNonfollowers = async (userMetadata) => {
-    const response = await axios.post('/api/nonfollower', userMetadata);
+    let response = null;
 
-    if (response.status === 500) {
-        throw new Error('Oops! Something went wrong, try again.');
+    try {
+        response = await axios.post('/api/nonfollower', userMetadata);
+    }
+    catch (error) {
+        throw new Error('Yikes! Something goofed, try again.');
     }
 
     // POST /api/nonfollower will return 200 with error property if handle does not exist
     if ('error' in response.data) {
+        console.log('in here 2');
         throw new Error(response.data.error);
     }
 
@@ -245,10 +251,13 @@ let requestNonfollowers = async (userMetadata) => {
 }
 
 let requestMetadata = async (handle) => {
-    const response = await axios.get('/api/metadata', { params: { username: handle } });
+    let response = null;
 
-    if (response.status === 500) {
-        throw new Error('Oops! Something went wrong, try again.');
+    try {
+        response = await axios.get('/api/metadata', { params: { username: handle } });
+    }
+    catch (error) {
+        throw new Error('Yikes! Something goofed, try again.');
     }
 
     if (response.status === 200 && 'error' in response.data) {
