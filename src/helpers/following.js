@@ -32,8 +32,10 @@ module.exports = {
 
                     followingBatch.forEach(user => {
                         const followingUserPayload = {
-                            username: user['node']['username'],
-                            profilePicUrl: user['node']['profile_pic_url']
+                            fullName: user['node']['full_name'],
+                            isVerified: user['node']['is_verified'],
+                            profilePicUrl: user['node']['profile_pic_url'],
+                            username: user['node']['username']
                         }
                         following.push(followingUserPayload);
                     });

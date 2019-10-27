@@ -57,7 +57,7 @@ usernameInput.addEventListener('keyup', (event) => {
 });
 
 let isValidHandleFormat = (handle) => {
-    const expression = new RegExp(/[~`!#$%\^&%^_£€¥•*+=\-\[\]\\';,/{}|\\":<>\?]/);
+    const expression = new RegExp(/[~`!#$%\^&%^£€¥•*+=\-\[\]\\';,/{}|\\":<>\?]/);
 
     let hasSpaceChars = handle.indexOf(' ') !== -1;
     let hasSpecialChars = expression.test(handle);
@@ -285,7 +285,15 @@ let renderNonfollowersTable = (nonfollowers) => {
         profilePicCell.innerHTML = profilePic.outerHTML;
 
         let handleRow = nonfollowerMetadataRow.insertCell(1);
-        handleRow.innerHTML = nonfollower.username;
+        handleRow.id = 'nonfollower-text-cell';
+        let handleParagraph = document.createElement('p');
+        handleParagraph.id = 'nonfollower-handle';
+        handleParagraph.innerText = nonfollower.username;
+        let fullNameParagraph = document.createElement('p');
+        fullNameParagraph.id = 'nonfollower-fullname';
+        fullNameParagraph.innerText = nonfollower.fullName;
+        handleRow.appendChild(handleParagraph);
+        handleRow.appendChild(fullNameParagraph);
 
         rowCount++;
     });
