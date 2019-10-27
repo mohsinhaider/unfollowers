@@ -31,8 +31,6 @@ submitButton.addEventListener('click', async () => {
                 State.update(State.states["IS_NONFOLLOWER_TABLE_ON"], true, () => renderNonfollowersTable(nonfollowers));
             }
             catch (error) {
-                console.log(error);
-                console.log(error.message);
                 State.update(State.states["IS_LOADING_ANIMATION_ON"], false, () => removeProfileHeaderLoadingAnimation());
                 State.update(State.states["IS_LOADING_ANIMATION_2_ON"], false, () => removeNonfollowersTableLoadingAnimation());
                 let fn = null;
