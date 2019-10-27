@@ -88,6 +88,20 @@ html {
     margin: 0 auto;
 }
 
+#nonfollower-fullname {
+    color: #999999;
+    margin-top: 0px;
+}
+
+#nonfollower-handle {
+    font-weight: bold;
+    margin-bottom: 0px;
+}
+
+#nonfollower-text-cell {
+    padding-left: 9px;
+}
+
 .profile-header-cell {
     text-align: center;
 }
