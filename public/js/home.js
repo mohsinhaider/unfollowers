@@ -57,7 +57,7 @@ usernameInput.addEventListener('keyup', (event) => {
 });
 
 let isValidHandleFormat = (handle) => {
-    const expression = new RegExp(/[~`!#$%\^&%^_£€¥•*+=\-\[\]\\';,/{}|\\":<>\?]/);
+    const expression = new RegExp(/[~`!#$%\^&%^£€¥•*+=\-\[\]\\';,/{}|\\":<>\?]/);
 
     let hasSpaceChars = handle.indexOf(' ') !== -1;
     let hasSpecialChars = expression.test(handle);
