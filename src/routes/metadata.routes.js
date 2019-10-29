@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
         metadataPayload = {
             metadata: {
                 id: rawMetadata.id,
-                username: rawMetadata.user,
+                username: rawMetadata.username,
                 fullName: rawMetadata.full_name,
                 followerCount: rawMetadata.edge_followed_by.count,
                 followingCount: rawMetadata.edge_follow.count,

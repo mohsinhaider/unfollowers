@@ -36,6 +36,9 @@ module.exports = {
             // If user is not followed by anyone, this code will not run
             // Instagram user ID is guarenteed to be stored in `instagramUserId` before this request is sent
             for (let i = 0; i < batchRequestCount; i++) {
+                if (process.env.DEBUG_THROTTLE) {
+                    console.log(`${targetInstagramUserMetadata.username}: Followers batch ${i+1}. Retrived ${followers.length} followers`);
+                }
                 if (queryEndCursor) {
                     followersVariables['after'] = queryEndCursor;
                     followersRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followersGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followersVariables))}`

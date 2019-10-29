@@ -31,6 +31,9 @@ module.exports = {
 
             // If user is not following anyone, this code will not run
             for (let i = 0; i < batchRequestCount; i++) {
+                if (process.env.DEBUG_THROTTLE) {
+                    console.log(`${targetInstagramUserMetadata.username}: Following batch ${i+1}. Retrived ${following.length} following`);
+                }
                 if (queryEndCursor) {
                     followingVariables['after'] = queryEndCursor;
                     followingRequestUrl = `https://www.instagram.com/graphql/query/?query_hash=${followingGraphqlQueryHash}&variables=${encodeURIComponent(JSON.stringify(followingVariables))}`;
