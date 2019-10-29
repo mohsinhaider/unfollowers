@@ -1,7 +1,7 @@
+const { botLogin } = require('../middleware/login');
 const express = require('express');
 const { followers } = require('../requests/followers');
 const { following } = require('../requests/following');
-const { metadata } = require('../requests/metadata');
 const { FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC, USERID_REQUEST_ERROR_404, USERID_REQUEST_ERROR_PRIVATE_USER } 
     = require('../constants/responses');
 
@@ -12,7 +12,7 @@ const router = express.Router();
  * that do not follow you back ('nonfollowers').
  * @name POST/api/nonfollower
 */
-router.post('/', async (req, res) => {
+router.post('/', botLogin, async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
     let followerUsernames, followingUsernames, nonfollowerUsernames = [];
 
@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
  * Retrieves your Instagram followers.
  * @name POST/api/nonfollower/follower
 */
-router.post('/follower', async (req, res) => {
+router.post('/follower', botLogin, async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
     let followersList;
     try {
