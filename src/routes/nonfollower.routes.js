@@ -16,10 +16,12 @@ router.post('/', botLogin, async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
     let followerUsernames, followingUsernames, nonfollowerUsernames = [];
 
+    console.log(req.csrfTokenValue);
+
     // Execute requests to get follower and following users together
     Promise.all([
-        followers(targetInstagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE),
-        following(targetInstagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE)
+        followers(targetInstagramUserMetadata, req.csrfTokenValue, req.sessionId),
+        following(targetInstagramUserMetadata, req.csrfTokenValue, req.sessionId)
     ]).then(result => {
         followerUsernames = result[0];
         followingUsernames = result[1];
@@ -55,7 +57,7 @@ router.post('/follower', botLogin, async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
     let followersList;
     try {
-        followersList = await followers(targetInstagramUserMetadata, process.env.SERVER_CSRF_TOKEN_VALUE, process.env.SERVER_SESSION_ID_VALUE);
+        followersList = await followers(targetInstagramUserMetadata, req.csrfTokenValue, req.sessionId);
     } 
     catch (error) {
         const errorResponseMessages = [FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC];
