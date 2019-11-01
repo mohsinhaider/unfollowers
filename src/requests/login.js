@@ -1,3 +1,5 @@
+// DEPRECATED! DO NOT USE.
+
 const request = require('request').defaults({ jar: true });
 const Bot = require('../models/bot');
 
