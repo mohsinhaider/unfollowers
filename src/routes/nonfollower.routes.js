@@ -25,8 +25,8 @@ router.post('/', botLogin, async (req, res) => {
         const handle = new Handle({ handle: targetInstagramUserMetadata.username });
         await handle.save();
     } catch (error) {
-        console.log('Username could not be written to database');
-        console.log(error);
+        // console.log('Username could not be written to database');
+        // console.log(error);
     }
 
     // Execute requests to get follower and following users together

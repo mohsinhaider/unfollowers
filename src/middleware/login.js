@@ -1,21 +1,22 @@
-const { login } = require('../requests/login');
-
 module.exports = {
     botLogin: async (req, res, next) => {
         try {
             const serviceAccountHandles = ['charlottebrandstatter', 'sloohbru6', 'itsbentleybo'];
-
-            let accountNumber = null;
             // console.log(global.serviceAccountsInUse);
+            
+            let accountNumber = null;
             do {
-                console.log('Trying....');
                 accountNumber = Math.floor(Math.random() * 3) + 1;
             }
             while (global.serviceAccountsInUse.includes(serviceAccountHandles[accountNumber - 1]))
 
+            const requestedUser = req.body.metadata.username;
+            const assignedServiceAccount = serviceAccountHandles[accountNumber - 1];
+            console.log(`[Info] Assigned \'${requestedUser}\' to \'${assignedServiceAccount}\' service account`);
+
             global.counter += 1;
-            // console.log(`${global.counter} ${serviceAccountHandles[accountNumber - 1]}`);
             global.serviceAccountsInUse.push(serviceAccountHandles[accountNumber - 1]);
+            // console.log(`${global.counter} ${serviceAccountHandles[accountNumber - 1]}`);
 
             if (accountNumber === 1) {
                 req.serviceAccountHandle = 'charlottebrandstatter';
