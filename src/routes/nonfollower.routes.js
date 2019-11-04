@@ -7,6 +7,9 @@ const { FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGI
 
 const router = express.Router();
 
+global.serviceAccountsInUse = [];
+global.counter = 0;
+
 /**
  * Calculates the set of your Instagram followers 
  * that do not follow you back ('nonfollowers').
@@ -16,13 +19,13 @@ router.post('/', botLogin, async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
     let followerUsernames, followingUsernames, nonfollowerUsernames = [];
 
-    console.log(req.csrfTokenValue);
-
     // Execute requests to get follower and following users together
     Promise.all([
         followers(targetInstagramUserMetadata, req.csrfTokenValue, req.sessionId),
         following(targetInstagramUserMetadata, req.csrfTokenValue, req.sessionId)
     ]).then(result => {
+        global.serviceAccountsInUse = global.serviceAccountsInUse.filter(svcAcc => svcAcc !== req.serviceAccountHandle)
+
         followerUsernames = result[0];
         followingUsernames = result[1];
 
@@ -45,6 +48,7 @@ router.post('/', botLogin, async (req, res) => {
         res.status(200).send(nonfollowerUsernames);
     })
     .catch(error => {
+        global.serviceAccountsInUse = global.serviceAccountsInUse.filter(svcAcc => svcAcc !== req.serviceAccountHandle)
         res.sendStatus(500);
     });
 });
