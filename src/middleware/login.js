@@ -6,16 +6,16 @@ module.exports = {
             const accountNumber = Math.floor(Math.random() * 3) + 1;
 
             if (accountNumber === 1) { // strawsapp_avondale
-                req.csrfTokenValue = "sPWbSBStGHoa6HgTgbXsC43SBVG6hjY8";
-                req.sessionId = "23094727907%3AmNXfDHODQF1aPX%3A25";
+                req.csrfTokenValue = process.env.INSTAGRAM_BOT_IG_CSRF_TOKEN_1;
+                req.sessionId = process.env.INSTAGRAM_BOT_IG_SESSION_ID_1;
             } 
             else if (accountNumber === 2) { // strawsapp_bucktown
-                req.csrfTokenValue = "6egDPzQzJIwAuIuBmrZOPJVXaLCTBdKB";
-                req.sessionId = "23126523015%3AKZHuB6SBSFGh37%3A0";
+                req.csrfTokenValue = process.env.INSTAGRAM_BOT_IG_CSRF_TOKEN_2;
+                req.sessionId = process.env.INSTAGRAM_BOT_IG_SESSION_ID_2;
             }
             else if (accountNumber == 3) { // strawsapp_douglas
-                req.csrfTokenValue = "jyotFHoOfZwp5OF1WHL5cbobFIqZUxyZ";
-                req.sessionId = "23289411621%3Adbm5EnLzL0JZvg%3A14";
+                req.csrfTokenValue = process.env.INSTAGRAM_BOT_IG_CSRF_TOKEN_3;
+                req.sessionId = process.env.INSTAGRAM_BOT_IG_SESSION_ID_3;
             }
             
             next();
