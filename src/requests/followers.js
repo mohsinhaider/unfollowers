@@ -37,7 +37,7 @@ module.exports = {
             // Instagram user ID is guarenteed to be stored in `instagramUserId` before this request is sent
             for (let i = 0; i < batchRequestCount; i++) {
                 if (process.env.DEBUG_THROTTLE) {
-                    console.log(`${targetInstagramUserMetadata.username}: Followers batch ${i+1}. Retrived ${followers.length} followers`);
+                    console.log(`${targetInstagramUserMetadata.username}: Followers batch ${i+1}. Retrieved ${followers.length} followers`);
                 }
                 if (queryEndCursor) {
                     followersVariables['after'] = queryEndCursor;
