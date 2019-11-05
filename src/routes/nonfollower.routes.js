@@ -19,6 +19,11 @@ global.counter = 0;
 */
 router.post('/', [checkSpoof, botLogin], async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
+
+    if (targetInstagramUserMetadata.followerCount > 4000 || targetInstagramUserMetadata.followingCount > 4000) {
+        return res.status(200).send({ error: 'Oops! Your followers or following count is above 4000.' });
+    }
+
     let followerUsernames, followingUsernames, nonfollowerUsernames = [];
 
     // Write targetInstagramUserMetadata.username
