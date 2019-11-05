@@ -1,4 +1,5 @@
 const { botLogin } = require('../middleware/login');
+const { checkSpoof } = require('../middleware/spoof');
 const express = require('express');
 const { followers } = require('../requests/followers');
 const { following } = require('../requests/following');
@@ -16,7 +17,7 @@ global.counter = 0;
  * that do not follow you back ('nonfollowers').
  * @name POST/api/nonfollower
 */
-router.post('/', botLogin, async (req, res) => {
+router.post('/', [checkSpoof, botLogin], async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
     let followerUsernames, followingUsernames, nonfollowerUsernames = [];
 
