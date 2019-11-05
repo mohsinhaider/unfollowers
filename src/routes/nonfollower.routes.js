@@ -1,5 +1,6 @@
 const { botLogin } = require('../middleware/login');
 const { checkSpoof } = require('../middleware/spoof');
+const { compareWithLimit } = require('../middleware/limit');
 const express = require('express');
 const { followers } = require('../requests/followers');
 const { following } = require('../requests/following');
@@ -17,13 +18,8 @@ global.counter = 0;
  * that do not follow you back ('nonfollowers').
  * @name POST/api/nonfollower
 */
-router.post('/', [checkSpoof, botLogin], async (req, res) => {
+router.post('/', [checkSpoof, compareWithLimit, botLogin], async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
-
-    if (targetInstagramUserMetadata.followerCount > 4000 || targetInstagramUserMetadata.followingCount > 4000) {
-        return res.status(200).send({ error: 'Oops! Your followers or following count is above 4000.' });
-    }
-
     let followerUsernames, followingUsernames, nonfollowerUsernames = [];
 
     // Write targetInstagramUserMetadata.username
