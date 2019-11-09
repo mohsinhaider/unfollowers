@@ -18,6 +18,7 @@ submitButton.addEventListener('click', async () => {
 
             let nonfollowers = null;
             try {
+                State.update(State.states["IS_SUBMIT_BUTTON_DISABLED"], true, () => disableSubmitButton());
                 State.update(State.states["IS_LOADING_ANIMATION_ON"], true, () => renderProfileHeaderLoadingAnimation());
                 const userMetadata = await requestMetadata(handle);
                 State.update(State.states["IS_LOADING_ANIMATION_ON"], false, () => removeProfileHeaderLoadingAnimation());
@@ -41,6 +42,9 @@ submitButton.addEventListener('click', async () => {
                 }
                 State.update('isErrorFlashOn', true, fn);
                 return;
+            }
+            finally {
+                State.update(State.states["IS_SUBMIT_BUTTON_DISABLED"], false, () => enableSubmitButton());
             }
         } 
         else {
@@ -67,6 +71,14 @@ let isValidHandleFormat = (handle) => {
         return false;
     }
     return true;
+}
+
+let enableSubmitButton = () => {
+    submitButton.disabled = false;
+}
+
+let disableSubmitButton = () => {
+    submitButton.disabled = true;
 }
 
 let scrollIntoLoadingAnimation2 = () => {
