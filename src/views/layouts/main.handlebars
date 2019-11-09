@@ -14,6 +14,14 @@
     <link rel="stylesheet" href="/css/home.css">
 
     <title>Straws</title>
+
+    <!-- Body pre-requisite scripts -->
+    <script src="/js/helper.js"></script>
+    <script src="/js/state.js"></script>
+    <script>
+        const isMobileClient = Helper.isMobileClient();
+        State.update('isMobileClient', isMobileClient);
+    </script>
 </head>
 <body>
     <header style="position: relative">
@@ -29,12 +37,6 @@
         $(document).ready(() => {
             $('.sidenav').sidenav();
         });
-    </script>
-    <script src="/js/helper.js"></script>
-    <script src="/js/state.js"></script>
-    <script>
-        const isMobileClient = Helper.isMobileClient();
-        State.update('isMobileClient', isMobileClient);
     </script>
 </body>
 </html>

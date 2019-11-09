@@ -31,5 +31,6 @@ State.states = {
     IS_LOADING_ANIMATION_2_ON: 'isLoadingAnimation2On',
     IS_NONFOLLOWER_TABLE_ON: 'isNonfollowerTableOn',
     IS_PROFILE_HEADER_ON: 'isProfileHeaderOn',
-    IS_SUBMIT_BUTTON_DISABLED: 'isSubmitButtonDisabled'
+    IS_SUBMIT_BUTTON_DISABLED: 'isSubmitButtonDisabled',
+    CURRENT_HANDLE: 'currentHandle'
 }
