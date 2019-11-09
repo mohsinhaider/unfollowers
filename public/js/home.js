@@ -5,21 +5,34 @@ const usernameInput = document.querySelector('#username-input');
 submitButton.addEventListener('click', async () => {
     // Remove leading and trailing whitespace
     let handle = (usernameInput.value).trim();
+    let currentUser = State.get('currentHandle');
 
     if (handle) {
+        // Check if user typed '@'
+        handle = Helper.trimAtSymbol(handle);
+
         // Clear components when new interface request happens
-        State.update(State.states["IS_PROFILE_HEADER_ON"], false, removeProfileHeader);
-        State.update(State.states["IS_NONFOLLOWER_TABLE_ON"], false, removeNonfollowersTable);
         State.update(State.states["IS_ERROR_FLASH_ON"], false, removeErrorFlash);
 
-        if (isValidHandleFormat(handle)) {
-            // Check if user typed '@'
-            handle = Helper.trimAtSymbol(handle);
+        let isHandleSame = currentUser === handle;
+        if (!isHandleSame) {
+            State.update(State.states["IS_PROFILE_HEADER_ON"], false, removeProfileHeader);
+            State.update(State.states["IS_NONFOLLOWER_TABLE_ON"], false, removeNonfollowersTable);
+        }
+        else { // User submitted handle that was just processed by Straws servers
+            State.update(State.states["IS_ERROR_FLASH_ON"], true, () => renderErrorFlash(`Woops! You just submitted that.`));
+            return;
+        }
 
+        if (isValidHandleFormat(handle)) {
             let nonfollowers = null;
             try {
+                State.update(State.states["IS_SUBMIT_BUTTON_DISABLED"], true, () => disableSubmitButton());
                 State.update(State.states["IS_LOADING_ANIMATION_ON"], true, () => renderProfileHeaderLoadingAnimation());
                 const userMetadata = await requestMetadata(handle);
+
+                // Past this point, the user is confirmed to be public. State "currentHandle" is updated with this user.
+                State.update(State.states["CURRENT_HANDLE"], handle);
                 State.update(State.states["IS_LOADING_ANIMATION_ON"], false, () => removeProfileHeaderLoadingAnimation());
                 State.update(State.states["IS_PROFILE_HEADER_ON"], true, () => renderProfileHeader(userMetadata));
 
@@ -33,18 +46,25 @@ submitButton.addEventListener('click', async () => {
             catch (error) {
                 State.update(State.states["IS_LOADING_ANIMATION_ON"], false, () => removeProfileHeaderLoadingAnimation());
                 State.update(State.states["IS_LOADING_ANIMATION_2_ON"], false, () => removeNonfollowersTableLoadingAnimation());
+                State.update(State.states["CURRENT_HANDLE"], undefined);
+
                 let fn = null;
                 if (errorMessages.includes(error.message)) {
                     fn = () => renderErrorFlash(error.message);
                 } else {
                     fn = renderErrorFlash;
                 }
-                State.update('isErrorFlashOn', true, fn);
+                State.update(State.states["IS_ERROR_FLASH_ON"], true, fn);
+
                 return;
+            }
+            finally {
+                State.update(State.states["IS_SUBMIT_BUTTON_DISABLED"], false, () => enableSubmitButton());
             }
         } 
         else {
-            State.update('isErrorFlashOn', true, renderErrorFlash);
+            State.update(State.states["IS_ERROR_FLASH_ON"], true, renderErrorFlash);
+            State.update(State.states["CURRENT_HANDLE"], undefined);
         }
     }
 });
@@ -67,6 +87,14 @@ let isValidHandleFormat = (handle) => {
         return false;
     }
     return true;
+}
+
+let enableSubmitButton = () => {
+    submitButton.disabled = false;
+}
+
+let disableSubmitButton = () => {
+    submitButton.disabled = true;
 }
 
 let scrollIntoLoadingAnimation2 = () => {
@@ -241,7 +269,6 @@ let requestNonfollowers = async (userMetadata) => {
 
     // POST /api/nonfollower will return 200 with error property if handle does not exist
     if ('error' in response.data) {
-        console.log('in here 2');
         throw new Error(response.data.error);
     }
 

@@ -4,11 +4,18 @@ module.exports = {
             const serviceAccountHandles = ['charlottebrandstatter', 'sloohbru6', 'itsbentleybo'];
             // console.log(global.serviceAccountsInUse);
             
+            let assignmentAttempts = 0;
             let accountNumber = null;
             do {
+                assignmentAttempts++;
                 accountNumber = Math.floor(Math.random() * 3) + 1;
             }
-            while (global.serviceAccountsInUse.includes(serviceAccountHandles[accountNumber - 1]))
+            while (global.serviceAccountsInUse.includes(serviceAccountHandles[accountNumber - 1])
+                    && assignmentAttempts < 100)
+            
+            if (assignmentAttempts === 100) {
+                return res.status(200).send({ error: 'Oops! We\'re busy. Can you try again in a few seconds?' }); 
+            }
 
             const requestedUser = req.body.metadata.username;
             const assignedServiceAccount = serviceAccountHandles[accountNumber - 1];
