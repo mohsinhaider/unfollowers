@@ -32,5 +32,6 @@ State.states = {
     IS_NONFOLLOWER_TABLE_ON: 'isNonfollowerTableOn',
     IS_PROFILE_HEADER_ON: 'isProfileHeaderOn',
     IS_SUBMIT_BUTTON_DISABLED: 'isSubmitButtonDisabled',
+    IS_TUTORIAL_ACTIVE: 'isTutorialActive',
     CURRENT_HANDLE: 'currentHandle'
 }

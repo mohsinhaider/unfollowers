@@ -18,10 +18,11 @@ submitButton.addEventListener('click', async () => {
         if (!isHandleSame) {
             State.update(State.states["IS_PROFILE_HEADER_ON"], false, removeProfileHeader);
             State.update(State.states["IS_NONFOLLOWER_TABLE_ON"], false, removeNonfollowersTable);
+            State.update(State.states["IS_TUTORIAL_ACTIVE"], false, removeTutorial);
         }
         else { // User submitted handle that was just processed by Straws servers
+            // No scroll below, since a user's results should be already rendered.
             State.update(State.states["IS_ERROR_FLASH_ON"], true, () => renderErrorFlash(`Woops! You just submitted that.`));
-            scrollIntoErrorFlash();
             return;
         }
 
@@ -57,6 +58,11 @@ submitButton.addEventListener('click', async () => {
                 }
                 State.update(State.states["IS_ERROR_FLASH_ON"], true, fn);
                 scrollIntoErrorFlash();
+
+                // Not my proudest moment :(
+                if (error.message === 'Oops! Your profile must be public to use Straws.') {
+                    State.update(State.states["IS_TUTORIAL_ACTIVE"], true, renderTutorial);
+                }
 
                 return;
             }
@@ -299,6 +305,31 @@ let requestMetadata = async (handle) => {
     }
 
     return response.data;
+}
+
+let renderTutorial = () => {
+    let tutorialDiv = document.createElement('div');
+    tutorialDiv.className = 'row';
+    tutorialDiv.id = 'tutorial-row'
+
+    let tutorialMessage = document.createElement('p')
+    tutorialMessage.id = 'tutorial-row-message';
+    tutorialMessage.textContent = 'Tutorial: Quickly change your account to public and then hit \'Submit\' again.';
+    
+    let tutorialGif = document.createElement('img');
+    tutorialGif.src = '/img/tutorial.gif';
+    tutorialGif.style.width = '308px';
+    tutorialGif.style.height = '452px';
+
+    tutorialDiv.appendChild(tutorialMessage);
+    tutorialDiv.appendChild(tutorialGif);
+    let errorRow = document.querySelector('#error-row');
+    tutorialDiv.appendAfter(errorRow);
+}
+
+let removeTutorial = () => {
+    let tutorialDiv = document.querySelector('#tutorial-row');
+    tutorialDiv.parentNode.removeChild(tutorialDiv);
 }
 
 let renderNonfollowersTable = (nonfollowers) => {
