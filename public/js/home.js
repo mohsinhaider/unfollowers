@@ -21,6 +21,7 @@ submitButton.addEventListener('click', async () => {
         }
         else { // User submitted handle that was just processed by Straws servers
             State.update(State.states["IS_ERROR_FLASH_ON"], true, () => renderErrorFlash(`Woops! You just submitted that.`));
+            scrollIntoErrorFlash();
             return;
         }
 
@@ -55,6 +56,7 @@ submitButton.addEventListener('click', async () => {
                     fn = renderErrorFlash;
                 }
                 State.update(State.states["IS_ERROR_FLASH_ON"], true, fn);
+                scrollIntoErrorFlash();
 
                 return;
             }
@@ -64,6 +66,7 @@ submitButton.addEventListener('click', async () => {
         } 
         else {
             State.update(State.states["IS_ERROR_FLASH_ON"], true, renderErrorFlash);
+            scrollIntoErrorFlash();
             State.update(State.states["CURRENT_HANDLE"], undefined);
         }
     }
@@ -95,6 +98,12 @@ let enableSubmitButton = () => {
 
 let disableSubmitButton = () => {
     submitButton.disabled = true;
+}
+
+let scrollIntoErrorFlash = () => {
+    document.querySelector('#error-row').scrollIntoView({
+        behavior: 'smooth'
+    });
 }
 
 let scrollIntoLoadingAnimation2 = () => {
