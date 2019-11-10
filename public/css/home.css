@@ -133,6 +133,14 @@ html {
     float: right;
 }
 
+#tutorial-row {
+    text-align: center;
+}
+
+#tutorial-row-message {
+    font-weight: bold;
+}
+
 .brand-logo {
     color: #4b20a8 !important;
     font-family: LeagueSpartan-Bold !important;

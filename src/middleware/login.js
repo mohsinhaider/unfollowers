@@ -8,7 +8,7 @@ module.exports = {
             let accountNumber = null;
             do {
                 assignmentAttempts++;
-                accountNumber = Math.floor(Math.random() * 3) + 1;
+                accountNumber = Math.floor(Math.random() * 4) + 1;
             }
             while (global.serviceAccountsInUse.includes(serviceAccountHandles[accountNumber - 1])
                     && assignmentAttempts < 100)
@@ -39,6 +39,11 @@ module.exports = {
                 req.serviceAccountHandle = 'itsbentleybo';
                 req.csrfTokenValue = process.env.INSTAGRAM_BOT_IG_CSRF_TOKEN_3;
                 req.sessionId = process.env.INSTAGRAM_BOT_IG_SESSION_ID_3;
+            }
+            else if (accountNumber == 4) {
+                req.serviceAccountHandle = 'dobeen.mike';
+                req.csrfTokenValue = process.env.INSTAGRAM_BOT_IG_CSRF_TOKEN_4;
+                req.sessionId = process.env.INSTAGRAM_BOT_IG_SESSION_ID_4;
             }
             
             next();
