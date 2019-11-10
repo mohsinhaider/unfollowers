@@ -6,4 +6,8 @@ router.get('/', (req, res) => {
     res.render('index/home');
 });
 
+router.get('/contact', (req, res) => {
+    res.render('index/contact');
+});
+
 module.exports = router;
