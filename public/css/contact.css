@@ -1,12 +1,27 @@
-
-
 #contact-container {
     padding-top: 45px;
     margin-left: 10%;
     margin-right: 10%;
 }
 
+.contact-child-header {
+    margin-bottom: 30px;
+}
+
 #contact-hero-text {
     text-align: center;
     font-weight: bold;
+    color: #561c75;
+}
+
+.contact-info-action {
+    padding-left: 4px;
+}
+
+#contact-child-subtext-main {
+    margin-bottom: 20px;
+}
+
+.contact-child-subtext {
+    font-size: 18px;
 }
