@@ -1,7 +1,7 @@
 module.exports = {
     botLogin: async (req, res, next) => {
         try {
-            const serviceAccountHandles = ['charlottebrandstatter', 'sloohbru6', 'itsbentleybo'];
+            const serviceAccountHandles = ['charlottebrandstatter', 'sloohbru6', 'itsbentleybo', 'dobeen.mike'];
             // console.log(global.serviceAccountsInUse);
             
             let assignmentAttempts = 0;
