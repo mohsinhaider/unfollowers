@@ -6,7 +6,7 @@ const { followers } = require('../requests/followers');
 const { following } = require('../requests/following');
 const { FOLLOWERS_REQUEST_ERROR, USERID_REQUEST_ERROR, USERID_REQUEST_ERROR_LOGIC, USERID_REQUEST_ERROR_404, USERID_REQUEST_ERROR_PRIVATE_USER } 
     = require('../constants/responses');
-const Handle = require('../models/handle');
+const { saveNonfollowerRequestInfo } = require('../middleware/reqinfo');
 
 const router = express.Router();
 
@@ -18,18 +18,9 @@ global.counter = 0;
  * that do not follow you back ('nonfollowers').
  * @name POST/api/nonfollower
 */
-router.post('/', [checkSpoof, compareWithLimit, botLogin], async (req, res) => {
+router.post('/', [checkSpoof, saveNonfollowerRequestInfo, compareWithLimit, botLogin], async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
     let followerUsernames, followingUsernames, nonfollowerUsernames = [];
-
-    // Write targetInstagramUserMetadata.username
-    try {
-        const handle = new Handle({ handle: targetInstagramUserMetadata.username });
-        await handle.save();
-    } catch (error) {
-        // console.log('Username could not be written to database');
-        // console.log(error);
-    }
 
     // Execute requests to get follower and following users together
     Promise.all([
