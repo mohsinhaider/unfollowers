@@ -10,12 +10,10 @@ const NonfollowerRequestSchema = new mongoose.Schema({
         required: true
     },
     originLatitude: {
-        type: Number,
-        required: true
+        type: Number
     },
     originLongitude: {
-        type: Number,
-        required: true
+        type: Number
     }
 }, {
     timestamps: true
