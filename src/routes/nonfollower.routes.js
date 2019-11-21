@@ -10,6 +10,7 @@ const { saveNonfollowerRequestInfo } = require('../middleware/reqinfo');
 
 const router = express.Router();
 
+global.serviceAccountHandles = ['charlottebrandstatter', 'sloohbru6', 'itsbentleybo'];
 global.serviceAccountsInUse = [];
 global.counter = 0;
 
