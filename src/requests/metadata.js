@@ -33,14 +33,14 @@ module.exports = {
                 }
                 catch(error) {
                     console.log('[ERROR] There was an error parsing metada response: ' + error);
-                    return reject(USERID_REQUEST_ERROR_PRIVATE_USER);
+                    return reject(USERID_REQUEST_ERROR_LOGIC);
                 }
 
                 try {
                     instagramUserId = responseObject.graphql.user.id
                     isPrivate = responseObject.graphql.user.is_private;
                     if (isPrivate) {
-                        return reject(USERID_REQUEST_ERROR_LOGIC);
+                        return reject(USERID_REQUEST_ERROR_PRIVATE_USER);
                     }
                 }
                 catch (error) {
