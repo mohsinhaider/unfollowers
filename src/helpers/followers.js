@@ -21,7 +21,7 @@ module.exports = {
                             throw new Error('Followers request yielded error response status code.');
                         }
                     }
-
+                    
                     const responseObject = JSON.parse(response.body);
                     const followersBatch = responseObject['data']['user']['edge_followed_by']['edges'];
 
@@ -45,6 +45,7 @@ module.exports = {
                     queryEndCursor = responseObject['data']['user']['edge_followed_by']['page_info']['end_cursor'];
                 }
                 catch (error) {
+                    console.log('[ERROR] There was an error fetching followers: ' + error);
                     // 400, 500 response code; empty followers response array; response layout changed 
                     return reject(FOLLOWERS_REQUEST_ERROR);
                 }

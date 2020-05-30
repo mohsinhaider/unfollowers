@@ -44,6 +44,7 @@ module.exports = {
                     queryEndCursor = responseObject['data']['user']['edge_follow']['page_info']['end_cursor'];
                 }
                 catch (error) {
+                    console.log('[ERROR] There was an error fetching following: ' + error);
                     // 400, 500 response code; empty followers response array; response layout changed 
                     return reject(FOLLOWING_REQUEST_ERROR);
                 }

@@ -10,7 +10,14 @@ module.exports = {
             }, (error, response) => {
                 if (!error) {
                     // Generic ipAddress will give a responseObject that has null values
-                    const responseObject = JSON.parse(response.body);
+                    let responseObject = null;
+                    try {
+                        responseObject = JSON.parse(response.body);
+                    }
+                    catch(error) {
+                        console.log('[ERROR] There was an error parsing iplocate response: ' + error);
+                        responseObject = {};
+                    }
                     return resolve(responseObject);
                 } else {
                     console.log('Error - request to iplocate failed');
