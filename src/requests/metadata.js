@@ -27,13 +27,16 @@ module.exports = {
                 }
 
                 let instagramUserId, isPrivate, responseObject;
-
-                try {
-                    responseObject = JSON.parse(response.body);
-                }
-                catch(error) {
-                    console.log('[ERROR] There was an error parsing metada response: ' + error);
-                    return reject(USERID_REQUEST_ERROR_LOGIC);
+                
+                for (let i = 0; i < 5; i++) {
+                    try {
+                        responseObject = JSON.parse(response.body);
+                        break;
+                    }
+                    catch(error) {
+                        console.log('[ERROR] There was an error parsing metada response: ' + error);
+                        return reject(USERID_REQUEST_ERROR_LOGIC);
+                    }
                 }
 
                 try {
