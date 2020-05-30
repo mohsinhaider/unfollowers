@@ -21,7 +21,7 @@ global.counter = 0;
 */
 router.post('/', [checkSpoof, saveNonfollowerRequestInfo, compareWithLimit, botLogin], async (req, res) => {
     const targetInstagramUserMetadata = req.body.metadata;
-    let followerUsernames, followingUsernames, nonfollowerUsernames = [];
+    let followerUsers, followingUsers, nonfollowerUsernames = [];
 
     // Execute requests to get follower and following users together
     Promise.all([
@@ -30,21 +30,20 @@ router.post('/', [checkSpoof, saveNonfollowerRequestInfo, compareWithLimit, botL
     ]).then(result => {
         global.serviceAccountsInUse = global.serviceAccountsInUse.filter(svcAcc => svcAcc !== req.serviceAccountHandle)
 
-        followerUsernames = result[0];
-        followingUsernames = result[1];
+        followerUsers = result[0];
+        followingUsers = result[1];
+
+        const followersUsernames = followerUsers.map(follower => {
+            return follower.username
+        });
+
+        const followersUsernamesSet = new Set(followersUsernames);
 
         // For each following user, check if they are a follower, if not, they are a 'nonfollower'
-        followingUsernames.forEach(followingUser => {
-            let foundUser = false;
-            // followingUser & followerUsername[i] schema: 
-            //      { username: 'this', profilePicUrl: 'that' }
-            for (let i = 0; i < followerUsernames.length; i++) {
-                if (followerUsernames[i].username === followingUser.username) {
-                    foundUser = true;
-                    break;
-                }
-            }
-            if (!foundUser) {
+        followingUsers.forEach(followingUser => {
+            // followingUser & followerUsername[i] schema:
+            // { username: 'this', profilePicUrl: 'that' }
+            if (!followersUsernamesSet.has(followingUser.username)) {
                 nonfollowerUsernames.push(followingUser);
             }
         });
@@ -52,6 +51,7 @@ router.post('/', [checkSpoof, saveNonfollowerRequestInfo, compareWithLimit, botL
         res.status(200).send(nonfollowerUsernames);
     })
     .catch(error => {
+        console.log(error)
         global.serviceAccountsInUse = global.serviceAccountsInUse.filter(svcAcc => svcAcc !== req.serviceAccountHandle)
         res.sendStatus(500);
     });
