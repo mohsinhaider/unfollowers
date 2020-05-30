@@ -40,7 +40,7 @@ module.exports = {
                     instagramUserId = responseObject.graphql.user.id
                     isPrivate = responseObject.graphql.user.is_private;
                     if (isPrivate) {
-                        return reject(USERID_REQUEST_ERROR_PRIVATE_USER);
+                        return reject(USERID_REQUEST_ERROR_LOGIC);
                     }
                 }
                 catch (error) {
