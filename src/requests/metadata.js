@@ -28,7 +28,7 @@ module.exports = {
 
                 let instagramUserId, isPrivate, responseObject, didMetadataParseSucceed;
                 
-                for (let i = 0; i < 5; i++) {
+                for (let i = 0; i < 2; i++) {
                     try {
                         responseObject = JSON.parse(response.body);
                         didMetadataParseSucceed = true;
